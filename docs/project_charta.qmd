@@ -91,25 +91,25 @@ gantt
     dateFormat YYYY-MM-DD
     tickInterval 5day
     section Project Understanding
-        Initiation workshop and context analysis     :a1, 2024-07-01, 1d
-        Stakeholder and user analysis     :a3, 2024-07-02, 5d
-        Situation assessment    :a4, 2024-07-06, 1d
-        Project objectives and visualization concept    :a5, 2024-07-07, 1d
-        Sign project charta: milestone, m1, 2024-07-08, 1d
+        Initiation workshop and context analysis     :a1, 2026-04-14, 1d
+        Stakeholder and user analysis     :a3, 2026-04-15, 5d
+        Situation assessment    :a4, 2026-04-22, 1d
+        Project objectives and visualization concept    :a5, 2026-04-23, 1d
+        Sign project charta: milestone, m1, 2026-04-24, 1d
     
     section Data Acquisition and Exploration
-        Acquire data :a6, 2024-07-08, 3d
-        Exploratory data analysis   :a7, 2024-07-09, 2d
-        Discuss data report: milestone, m2, 2024-07-11, 1d
+        Acquire data :a6, 2026-05-04, 3d
+        Exploratory data analysis   :a7, 2026-05-07, 2d
+        Discuss data report: milestone, m2, 2026-05-11, 1d
         
     section Visual Encoding and Design
-        Overview charts   :a8, 2024-07-11, 3d
-        Maps :a9, 2024-07-11, 5d
-        Implement Dashboard prototype :a10, 2024-07-16, 5d
-        Complete visualization report :a10, 2024-07-21, 1d
+        Overview charts   :a8, 2026-05-12, 3d
+        Maps :a9, 2026-05-15, 5d
+        Implement Dashboard prototype :a10, 2026-05-22, 5d
+        Complete visualization report :a10, 2026-05-29, 1d
     section Evaluation
-        Prepare presentation :a10, 2024-07-22, 2d
-        Project presentation : milestone, m2, 2024-07-24, 4m
+        Prepare presentation :a10, 2026-06-01, 2d
+        Project presentation : milestone, m2, 2026-06-08, 4m
 ```
 
 See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/)
