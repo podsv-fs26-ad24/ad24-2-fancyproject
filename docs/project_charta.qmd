@@ -115,4 +115,10 @@ gantt
 See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html). It might not be displayed correctly in Safari &#8594; use Chrome. [Live editor with export functionality](https://mermaid.live/)
 
 ## Roles and Contact Details
-List the people involved in the development work here with their role titles, tasks and contact details.
+
+| Name            | Role         | Contact Details           |
+|-----------------|--------------|---------------------------|
+| Imhof Alexandra | Collaborator | imhofal1@students.zhaw.ch |
+| Labarile Vivien | Collaborator | labarviv@students.zhaw.ch |
+| Lauber Annina   | Collaborator | laubeann@students.zhwa.ch |
+
