@@ -122,3 +122,4 @@ See [Mermaid syntax for Gantt charts](https://mermaid.js.org/syntax/gantt.html).
 | Labarile Vivien | Collaborator | labarviv@students.zhaw.ch |
 | Lauber Annina   | Collaborator | laubeann@students.zhwa.ch |
 
+The project team works collaboratively and without fixed role assignments. All members jointly take on tasks in data analysis, visualization, sustainability research, communication, and stakeholder management. Decisions are made collectively within the team, and responsibility for the project outcome is shared equally.
