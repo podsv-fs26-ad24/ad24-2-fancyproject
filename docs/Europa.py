@@ -177,3 +177,7 @@ if not filtered.empty:
         .head(10)
     )
     st.dataframe(top_routes)
+
+
+# ############
+# # to start streamlit enter in terminal: streamlit run Europa.py
