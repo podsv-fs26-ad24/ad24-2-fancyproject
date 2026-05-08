@@ -59,7 +59,10 @@ def build_map(selected_departure, selected_arrival, df):
         return fig
 
     r = route_df.iloc[0]
-    line_color = "green" if r["train_alternative_available"] else "red"
+    if r["train_alternative_available"] == 1:
+        line_color = "#83781B"   # train alternative
+    else:
+        line_color = "#DCC9B6"   # flight
 
     fig.add_trace(go.Scattergeo(
         lon=[r["departure_lon"], r["arrival_lon"]],

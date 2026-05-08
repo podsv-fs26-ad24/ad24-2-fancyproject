@@ -25,7 +25,7 @@ df_eu = df[
     (df["arrival_lon"].between(-15, 35))
 ].copy()
 
-st.title("🇪🇺 Europe – Business Travel & CO₂")
+st.title("Europe – Business Travel & CO₂")
 
 # Filter: Jahr, Business Unit, Stadt
 col1, col2, col3 = st.columns(3)
@@ -110,7 +110,7 @@ if not filtered.empty:
     
 
     fig.update_layout(
-        height=650,
+        height=450,
         geo=dict(
             projection_type="natural earth",
             lonaxis=dict(range=[-15, 35]),
