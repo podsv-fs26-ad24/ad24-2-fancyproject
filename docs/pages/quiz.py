@@ -1,10 +1,21 @@
 import streamlit as st
 
 st.title("Company Travel Sustainability Quiz")
-st.write("Answer each question to discover your travel sustainability profile.")
 
 # ---------------------------------------------------
-# 1. Define questions
+# 1. Initialize session state
+# ---------------------------------------------------
+if "quiz_started" not in st.session_state:
+    st.session_state.quiz_started = False
+
+if "quiz_done" not in st.session_state:
+    st.session_state.quiz_done = False
+
+if "answers" not in st.session_state:
+    st.session_state.answers = []
+
+# ---------------------------------------------------
+# 2. Define questions
 # ---------------------------------------------------
 questions = [
     ("How do you usually commute to the office?",
@@ -40,88 +51,82 @@ questions = [
 ]
 
 # ---------------------------------------------------
-# 2. Initialize session state
+# 3. Start screen
 # ---------------------------------------------------
-if "current_q" not in st.session_state:
-    st.session_state.current_q = 0
-if "answers" not in st.session_state:
-    st.session_state.answers = []
-if "quiz_done" not in st.session_state:
-    st.session_state.quiz_done = False
+if not st.session_state.quiz_started and not st.session_state.quiz_done:
+    st.write("Click below to begin the quiz.")
+    if st.button("Begin Quiz"):
+        st.session_state.quiz_started = True
+    st.stop()
 
 # ---------------------------------------------------
-# 3. Display current question or result
+# 4. Quiz screen (all questions at once)
 # ---------------------------------------------------
-if not st.session_state.quiz_done:
-    q_index = st.session_state.current_q
-    question, options = questions[q_index]
+if st.session_state.quiz_started and not st.session_state.quiz_done:
 
-    st.subheader(f"Question {q_index + 1} of {len(questions)}")
-    choice = st.radio(question, [opt[0] for opt in options], key=f"q{q_index}")
+    st.header("Answer all questions")
 
-    # Navigation buttons
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        if st.button("Back"):
-            if st.session_state.current_q > 0:
-                st.session_state.current_q -= 1
-                st.session_state.answers.pop()  # remove last answer safely
+    st.session_state.answers = []  # reset answers each time
 
-    with col2:
-        if st.button("Next"):
-            # Save answer
-            for text, score in options:
-                if choice == text:
-                    if len(st.session_state.answers) > q_index:
-                        st.session_state.answers[q_index] = score
-                    else:
-                        st.session_state.answers.append(score)
-                    break
-            # Move forward or finish
-            if st.session_state.current_q < len(questions) - 1:
-                st.session_state.current_q += 1
-            else:
-                st.session_state.quiz_done = True
+    for i, (question, options) in enumerate(questions):
+        st.subheader(f"Question {i+1}")
+        choice = st.radio(
+            question,
+            [opt[0] for opt in options],
+            key=f"q{i}"
+        )
+        # store index of selected option
+        for idx, (text, score) in enumerate(options):
+            if choice == text:
+                st.session_state.answers.append(score)
+                break
 
-else:
-    # ---------------------------------------------------
-    # 4. Show result
-    # ---------------------------------------------------
+    if st.button("Submit Answers"):
+        st.session_state.quiz_done = True
+        st.session_state.quiz_started = False
+    st.stop()
+
+# ---------------------------------------------------
+# 5. Result screen
+# ---------------------------------------------------
+if st.session_state.quiz_done:
+
     total_score = sum(st.session_state.answers)
-    st.markdown("---")
+
     st.header("Your Travel Sustainability Profile")
+    st.markdown(
+        f"<p style='font-size:16px;'>Your total score: <b>{total_score} / 30</b></p>",
+        unsafe_allow_html=True
+    )
 
     if total_score <= 10:
         st.subheader("The Smog‑Orc Syndicate")
-        st.image("pics/smogorc.png", width=300)
+        st.image("pics/smogorc.png", width=200)
         st.write("""
         Your travel habits generate a high carbon footprint.  
-        Small changes — like choosing trains for regional trips or reducing flight frequency —  
-        can make a big difference.
+        Small changes like choosing trains for regional trips or reducing flight frequency  
+        can make a big difference. Try being more mindful.
         """)
 
     elif 11 <= total_score <= 20:
         st.subheader("Rohan Riders of the Middle Ground")
-        st.image("pics/rohanrider.png", width=300)
+        st.image("pics/rohanrider.png", width=200)
         st.write("""
         You make some sustainable choices, but there’s room to improve.  
-        With a few adjustments — like lighter packing or more virtual meetings —  
+        With a few adjustments like lighter packing or more virtual meetings  
         you can significantly reduce your travel impact.
         """)
 
     else:
         st.subheader("Gandalf the Green")
-        st.image("pics/gandalfgreen.png", width=300)
+        st.image("pics/gandalfgreen.png", width=200)
         st.write("""
         You travel consciously and efficiently.  
-        Your habits already reduce emissions — keep inspiring others in the company  
-        to follow your lead.
+        Your habits already reduce emissions keep inspiring others in the company  
+        to follow your lead. Good job!
         """)
-    
-    st.markdown(f"### Your total score: **{total_score} / 30**")
-    
-    # Restart button
+
     if st.button("Restart Quiz"):
-        st.session_state.current_q = 0
-        st.session_state.answers = []
         st.session_state.quiz_done = False
+        st.session_state.quiz_started = False
+        st.session_state.answers = []
