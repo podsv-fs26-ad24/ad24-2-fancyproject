@@ -211,6 +211,7 @@ Please book the following trip for me:
 - To: {selected_arrival}
 - Departure date: {departure_date}
 - Travel mode: {booking_choice}
+- Note: {optional_note if optional_note else 'N/A'}
 """
 
 if trip_type == "Round-trip":
