@@ -5,6 +5,10 @@ import plotly.express as px
 
 st.set_page_config(page_title="Europe – Business Travel", layout="wide")
 
+from components.navbar import navbar
+navbar()
+
+
 @st.cache_data
 def load_data():
     df = pd.read_excel("traveldata-export.xlsx")
@@ -50,7 +54,7 @@ bu_colors = {
 st.title("Europe – Company Business Travel & CO₂")
 
 # ---------------------------------------------------
-# FILTER + KPI + MAP (SIDE BY SIED)
+# FILTER + KPI + MAP (SIDE BY SIDE)
 # ---------------------------------------------------
 filter_col, space1, kpi_col, space2, map_col = st.columns([3,1,2,1,6])
 

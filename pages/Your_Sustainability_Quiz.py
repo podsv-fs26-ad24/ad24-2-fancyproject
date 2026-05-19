@@ -1,8 +1,10 @@
 # Travel Sustainability Quiz
 import streamlit as st
 
-st.title("Travel Sustainability Quiz")
+from components.navbar import navbar
+navbar()
 
+st.title("Travel Sustainability Quiz")
 
 # ---------------------------------------------------
 # 1. Initialize session state

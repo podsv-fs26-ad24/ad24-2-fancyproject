@@ -4,7 +4,18 @@ import plotly
 import plotly.graph_objects as go
 import math
 
-st.set_page_config(page_title="Booking – Europe & Worldwide", layout="wide", initial_sidebar_state="collapsed")
+import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
+import math
+
+st.set_page_config(
+    page_title="Booking – Europe & Worldwide",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+from components.navbar import navbar
+navbar()
 
 # ---------------------------------------------------
 # DATA LOADING
@@ -105,7 +116,7 @@ def build_map(selected_departure, selected_arrival, df):
 # ---------------------------------------------------
 col_title, col_map_title = st.columns([1.2, 1])
 with col_title:
-    st.markdown("<h1 style='margin-bottom:0;'>✈️ Book your next trip</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='margin-bottom:0;'>Book your next trip</h1>", unsafe_allow_html=True)
 with col_map_title:
     st.markdown("<h1 style='margin-bottom:0;'></h1>", unsafe_allow_html=True)
 

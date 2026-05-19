@@ -1,8 +1,11 @@
 import streamlit as st
 from datetime import datetime
-st.set_page_config(page_title="Feature Wishbox", layout="centered")
+st.set_page_config(page_title="Feature Wishbox", layout="wide")
 
-st.title("💡 Feature Wishbox")
+from components.navbar import navbar
+navbar()
+
+st.title("Feature Wishbox")
 st.write("Tell us what features or information you’d like to see in the future:")
 
 feedback = st.text_area(

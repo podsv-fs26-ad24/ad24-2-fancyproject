@@ -5,6 +5,9 @@ import plotly.express as px
 
 st.set_page_config(page_title="Worldwide – Business Travel", layout="wide")
 
+from components.navbar import navbar
+navbar()
+
 @st.cache_data
 def load_data():
     df = pd.read_excel("traveldata-export.xlsx")
