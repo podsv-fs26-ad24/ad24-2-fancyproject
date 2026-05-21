@@ -4,11 +4,6 @@ import plotly
 import plotly.graph_objects as go
 import math
 
-import streamlit as st
-import pandas as pd
-import plotly.graph_objects as go
-import math
-
 st.set_page_config(
     page_title="Booking – Europe & Worldwide",
     layout="wide",
