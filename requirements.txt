@@ -2,3 +2,11 @@ streamlit
 plotly
 pandas
 numpy
+
+jupyter
+nbformat
+ipykernel
+matplotlib
+seaborn
+openpyxl
+ydata-profiling
