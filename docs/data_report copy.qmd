@@ -116,7 +116,7 @@ from ydata_profiling import ProfileReport
 plt.style.use("seaborn-v0_8")
 
 # Load Excel file safely
-raw_df = pd.read_excel("traveldata-export.xlsx").copy()
+raw_df = pd.read_excel("../traveldata-export.xlsx").copy()
 
 # Select only numerical columns
 num_cols = raw_df.select_dtypes(include=[np.number]).columns
