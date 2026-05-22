@@ -23,7 +23,7 @@ df = load_data()
 # ---------------------------------------------------
 # BUSINESS UNIT RENAME + COLORS
 # ---------------------------------------------------
-# Mapping alte BU → neue BU
+# mapping old BU → new BU names
 bu_rename = {
     "BU1": "Sales & Customer Markets",
     "BU3": "Operations & Delivery",
@@ -31,7 +31,7 @@ bu_rename = {
     "BU4": "Corporate Services"
 }
 
-# Europa-Filter (Koordinaten)
+# europa-filter (coordinates)
 df_eu = df[
     (df["departure_lat"].between(35, 70)) &
     (df["departure_lon"].between(-15, 35)) &
@@ -39,11 +39,11 @@ df_eu = df[
     (df["arrival_lon"].between(-15, 35))
 ].copy()
 
-# Mapping anwenden
+# mapping
 df["business_unit"] = df["business_unit"].replace(bu_rename)
 df_eu["business_unit"] = df_eu["business_unit"].replace(bu_rename)
 
-# Corporate Farben
+# corporate colors
 bu_colors = {
     "Sales & Customer Markets": "#65524D",
     "Operations & Delivery": "#817E9F",
@@ -51,7 +51,35 @@ bu_colors = {
     "Corporate Services": "#009B72"
 }
 
-st.title("Europe – Company Business Travel & CO₂")
+# st.title("Europe – Company Business Travel & CO₂")
+
+title_col, space = st.columns([4, 4])
+info_col, space = st.columns([4, 4])
+
+with title_col:
+    st.markdown(
+        """
+        <h1 style='font-size:50px; margin-bottom:0px;'>
+            Europe – Company Business Travel & CO₂
+        </h1>
+        """,
+        unsafe_allow_html=True
+    )
+
+with info_col:
+    st.markdown(
+        """
+        <div style='font-size:20px; color:#444; margin-top:-8px; margin-bottom:25px;'>
+            This page provides you an overview of Aurevia’s European business travel patterns 
+            and shows how travel behaviour impacts CO₂ emissions across all Business Units. 
+            It helps to understand where we travel most, how our emissions are distributed 
+            and how we war progressing toward Aurevia's annual -5% CO₂ reduction target.
+            The KPIs summarise total travels, total emissions, the most frequent route, 
+            and whether a train alternative exists within the selected filters.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # ---------------------------------------------------
 # FILTER + KPI + MAP (SIDE BY SIDE)
@@ -138,11 +166,11 @@ with kpi_col:
     else:
         train_alt_label = "NO"
 
-    # KPIs untereinander
+    # KPIs under each other
     st.metric("Number of Travels", total_trips)
     st.metric("Total CO₂", f"{total_co2:.1f} t")
 
-    # Top-Route mit ausgeschriebenen Städten
+    # Top-Route with city names
     st.markdown(
         f"""
         <div style="font-size:14px; font-weight:500; margin-bottom:2px;">
@@ -160,20 +188,6 @@ with kpi_col:
         unsafe_allow_html=True
     )
     st.metric("Train-Alternative", train_alt_label)
-
-    # ###
-    # # wird ersetzt durch neuen code
-    # if top_route != "–": 
-    #     df_top = df_kpi[df_kpi["route"] == top_route]
-    #     train_alt_label = "YES" if df_top["train_alternative_available"].sum() > 0 else "NO"
-    # else:
-    #     train_alt_label = "NO"
-
-    # # KPIs under each other
-    # st.metric("Number of Travels", total_trips)
-    # st.metric("Total CO₂", f"{total_co2:.1f} t")
-    # st.metric("Top-Route", top_route)
-    # st.metric("Train-Alternative", train_alt_label)
 
 # ---------------- MAP ----------------
 with map_col:
@@ -237,6 +251,8 @@ with map_col:
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.info("No routes found for the selected filters.")
+
+st.markdown("<div style='height:60px;'></div>", unsafe_allow_html=True)
 
 # ---------------------------------------------------
 # EMISSIONS BY BUSINESS UNIT  +  TOP ROUTES (SIDE BY SIDE)
