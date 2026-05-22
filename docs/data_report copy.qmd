@@ -133,7 +133,7 @@ freq_num = {
 for col in num_cols:
     print(f"\n### {col}\n")
     display(freq_num[col])
-````
+```
 
 Histogram of numerical values:
 ```{python}
