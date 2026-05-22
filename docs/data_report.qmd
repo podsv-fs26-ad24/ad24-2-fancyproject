@@ -92,7 +92,7 @@ Dependent variables: CO₂e emissions, cost
 <br>
 
 **Numerical analyses**
-<br>
+
 : Analysis of numericals {#tbl-num-view}
 
 |                 |   unique_values |   missing_values |   missing_fraction |   zero_values |   zero_fraction |   negative_values |   negative_fraction |
