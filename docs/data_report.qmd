@@ -8,7 +8,7 @@ The project is based on a single raw dataset downloaded from the link provided o
 
 | Name                   | Quelle   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                            | Storage location                                                                                              |
 |:-----------------------|:---------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------|
-| traveldata-export.xlsx | Internal corporate travel logs (flights, trains, buses, rental cars) | In this project: ad24-2-fancyproject/traveldata-export.xlsx<br><br>On PODSV FS26 Moodle: https://moodle.zhaw.ch/pluginfile.php/2585021/mod_page/content/2/traveldata-export.xlsx |
+| traveldata-export.xlsx | Internal corporate travel logs (flights, trains, buses, rental cars) | In this project:<br>ad24-2-fancyproject/traveldata-export.xlsx<br><br>On PODSV FS26 Moodle: https://moodle.zhaw.ch/pluginfile.php/2585021/mod_page/content/2/traveldata-export.xlsx |
 
 
 ### Details Dataset 1
@@ -144,7 +144,7 @@ freq_num = {
 }
 
 for col in num_cols:
-    print(f"\n### Frequency distribution for {col}\n")
+    print(f"\n### Frequency distribution of {col}\n")
     display(freq_num[col])
 ```
 
@@ -199,7 +199,7 @@ plt.show()
 
 **Categorical analyses**
 
-: Analysis of categories {#cat-overview}
+: Analysis of categoricals {#tbl-cat-view}
 
 |                     |   unique_values |   missing_values | top_value      |
 |:--------------------|----------------:|-----------------:|:---------------|
@@ -241,7 +241,7 @@ freq_cat = {
     for col in cat_cols
 }
 for col in cat_cols:
-    print(f"\n### {col}\n")
+    print(f"\n### Frequency distribution of {col}\n")
     display(freq_cat[col])
 ```
 
