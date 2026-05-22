@@ -6,10 +6,9 @@ The project is based on a single raw dataset downloaded from the link provided o
 
 : Overview of raw datasets used in the project. {#tbl-raw-overview}
 
-| Name                   | Quelle                                                               | Storage location                                                                                              |
+| Name                   | Quelle   &nbsp;&nbsp;&nbsp;&nbsp;                                                            | Storage location                                                                                              |
 |:-----------------------|:---------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------|
-| traveldata-export.xlsx | Internal corporate travel logs (flights, trains, buses, rental cars) | In this project: ad24-2-fancyproject/traveldata-export.xlsx                                                   |
-|                        |                                                                      | On PODSV FS26 Moodle: https://moodle.zhaw.ch/pluginfile.php/2585021/mod_page/content/2/traveldata-export.xlsx |
+| traveldata-export.xlsx | Internal corporate travel logs (flights, trains, buses, rental cars) | In this project: ad24-2-fancyproject/traveldata-export.xlsx<br>On PODSV FS26 Moodle: https://moodle.zhaw.ch/pluginfile.php/2585021/mod_page/content/2/traveldata-export.xlsx |
 
 
 ### Details Dataset 1
@@ -37,7 +36,7 @@ Independent variables: travel mode, distance, business unit, travel purpose, geo
 Dependent variables: CO₂e emissions, cost
 
 #### Data Catalogue
-: Data catalogue for Dataset 1. {#tbl-data-catalogue}
+: Data catalogue for the Dataset. {#tbl-data-catalogue}
 
 |   Column index | Column name                 | Datatype       | Values (Range)               | Short description      |
 |---------------:|:----------------------------|:---------------|:-----------------------------|:-----------------------|
@@ -75,7 +74,7 @@ Dependent variables: CO₂e emissions, cost
 
 #### Data Chracteristics and Quality
 
-: Statistical overview of numericals: {#tbl-data-catalogue}
+: Statistical overview of numericals {#tbl-data-catalogue}
 
 |                 |   count |        mean |         std |       min |       25% |       50% |        75% |        max |   missing_values |   unique_values |      mode |      range |        IQR |       variance |
 |:----------------|--------:|------------:|------------:|----------:|----------:|----------:|-----------:|-----------:|-----------------:|----------------:|----------:|-----------:|-----------:|---------------:|
@@ -88,8 +87,10 @@ Dependent variables: CO₂e emissions, cost
 | arrival_lon     |   25527 |    6.16772  |   36.4335   | -157.924  |   6.10895 |   8.54806 |   11.4041  |   174.805  |                0 |             485 |   8.54806 |   332.729  |    5.29515 | 1327.4         |
 | cost_CHF        |   25527 |  740.074    | 1233.26     |   17.46   | 214.98    | 434.05    |  659.125   | 17273.2    |                0 |           20395 |  67.25    | 17255.7    |  444.145   |    1.52093e+06 |
 
+
+
 Numerical analyses
-: Analysis of numericals: {#tbl-processed-overview}
+: Analysis of numericals {#tbl-processed-overview}
 |                 |   unique_values |   missing_values |   missing_fraction |   zero_values |   zero_fraction |   negative_values |   negative_fraction |
 |:----------------|----------------:|-----------------:|-------------------:|--------------:|----------------:|------------------:|--------------------:|
 | CO2e RFI2 (t)   |            4248 |                0 |                  0 |             0 |               0 |                 0 |           0         |
@@ -101,7 +102,7 @@ Numerical analyses
 | arrival_lon     |             485 |                0 |                  0 |             0 |               0 |              3801 |           0.148901  |
 | cost_CHF        |           20395 |                0 |                  0 |             0 |               0 |                 0 |           0         |
 
-Numerical frequency distribution:
+**Numerical frequency distribution**
 ```{python}
 #| label: freqdist-n
 #| fig-cap: "Frequency distribution of numericals"
@@ -114,6 +115,10 @@ import seaborn as sns
 from ydata_profiling import ProfileReport
 
 plt.style.use("seaborn-v0_8")
+
+import warnings
+warnings.filterwarnings("ignore")
+
 
 # Load Excel file safely
 raw_df = pd.read_excel("../traveldata-export.xlsx").copy()
@@ -131,11 +136,11 @@ freq_num = {
 }
 
 for col in num_cols:
-    print(f"\n### {col}\n")
+    print(f"\n### Frequency distribution for **{col}**\n")
     display(freq_num[col])
 ```
 
-Histogram of numerical values:
+**Histogram of numerical values**
 ```{python}
 #| label: histo-n
 #| fig-cap: "Histogram of numericals"
@@ -148,6 +153,7 @@ plt.tight_layout()
 plt.show()
 ```
 
+**Boxplots of numerical values**
 ```{python}
 #| label: box-n
 #| fig-cap: "Boxplots of numericals"
@@ -160,10 +166,25 @@ plt.tight_layout()
 plt.show()
 ```
 
-Categorical analyses
+**Correclation matrix heatmap of numerical variables**
+```{python}
+#| label: corr-n
+#| fig-cap: "Correlation matrix heatmap of numericals"
+#| echo: true
+#| code-fold: true
+corr = raw_df.select_dtypes(include=[np.number]).corr()
+
+plt.figure(figsize=(12, 8))
+sns.heatmap(corr, annot=True, cmap="coolwarm", center=0)
+plt.title("Correlation Heatmap")
+plt.tight_layout()
+plt.show()
+```
+
+**Categorical analyses**
 : Analysis of categories: {#tbl-processed-overview}
 |                     |   unique_values |   missing_values | top_value      |
-|:--------------------|----------------:|-----------------:|:---------------|
+|:--------------------|----------------:|-----------------:|---------------:|
 | person_type         |               2 |                0 | employee       |
 | transport_mode      |               4 |                0 | flight         |
 | departure_iata      |             478 |                0 | ZRH            |
@@ -182,7 +203,7 @@ Categorical analyses
 | subunit             |              10 |                0 | Subunit 4.1    |
 | travel_purpose      |               6 |                0 | client_meeting |
 
-Categorical frequency distributions
+**Frequency distributions of categorical variables**
 ```{python}
 #| label: freqdist-c
 #| fig-cap: "Frequency distribution of categoricals"
@@ -202,18 +223,51 @@ for col in cat_cols:
     display(freq_cat[col])
 ```
 
+**Correlation matrix heatmap of categorical variables**
 ```{python}
 #| label: corr-c
-#| fig-cap: "Correlation matrix of categoricals"
+#| fig-cap: "Correlation matrix heatmap of categoricals"
 #| echo: true
 #| code-fold: true
-corr = raw_df.select_dtypes(include=[np.number]).corr()
+#| warning: false
+#| message: false
 
-plt.figure(figsize=(12, 8))
-sns.heatmap(corr, annot=True, cmap="coolwarm", center=0)
-plt.title("Correlation Heatmap")
+from scipy.stats import chi2_contingency
+
+def cramers_v(x, y):
+    """Compute Cramér's V for two categorical variables."""
+    confusion_matrix = pd.crosstab(x, y)
+    chi2 = chi2_contingency(confusion_matrix)[0]
+    n = confusion_matrix.sum().sum()
+    r, k = confusion_matrix.shape
+    return np.sqrt(chi2 / (n * (min(r - 1, k - 1))))
+
+
+cat_cols = raw_df.select_dtypes(include=["object", "category"]).columns
+
+cramers_matrix = pd.DataFrame(
+    np.zeros((len(cat_cols), len(cat_cols))),
+    index=cat_cols,
+    columns=cat_cols
+)
+
+for col1 in cat_cols:
+    for col2 in cat_cols:
+        cramers_matrix.loc[col1, col2] = cramers_v(raw_df[col1], raw_df[col2])
+
+plt.figure(figsize=(12, 10))
+sns.heatmap(
+    cramers_matrix,
+    annot=True,
+    cmap="coolwarm",
+    vmin=0,
+    vmax=1,
+    square=True
+)
+plt.title("Cramér's V Heatmap for Categorical Variables")
 plt.tight_layout()
 plt.show()
+
 ```
 
 Figures can be referenced like @corr-c.
@@ -222,6 +276,7 @@ ___
 The results the exploratory data analysis should be summarised here (code and full output in the `eda` subfolder) and the implications for the subsequent data pre-processing, visualization design and implementation steps should be discussed. Is the data quality and quantity sufficient to achieve the visualisation goals? Is it necessary to acquire additional or different data? Are there any limitations that need to be considered in the design and implementation of the visualisation product? Are there any specific data characteristics that can be used to enhance the visualisation design? For example, if there are a lot of missing values in a dataset, this might need to be taken into account in the design of the visualisation product, e.g. by using specific visual encodings to indicate missing values or by providing options for filtering or imputing missing values. 
 
 Tip: `Ydata-profiling` is a Python library that can be used to perform exploratory data analysis and generate a comprehensive report on the characteristics of the data, including the distribution of values, missing values, correlations between variables, and more. This can be a useful tool to generate the full analysis in the code section and then only include the relevant information here in the data report.
+___
 
 ```{python}
 #| echo: true
