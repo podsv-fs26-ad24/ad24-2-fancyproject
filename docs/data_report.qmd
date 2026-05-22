@@ -6,34 +6,35 @@ The project is based on a single raw dataset downloaded from the link provided o
 
 : Overview of raw datasets used in the project. {#tbl-raw-overview}
 
-| Name                   | Quelle   &nbsp;&nbsp;&nbsp;&nbsp;                                                            | Storage location                                                                                              |
+| Name                   | Quelle   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                            | Storage location                                                                                              |
 |:-----------------------|:---------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------|
-| traveldata-export.xlsx | Internal corporate travel logs (flights, trains, buses, rental cars) | In this project: ad24-2-fancyproject/traveldata-export.xlsx<br>On PODSV FS26 Moodle: https://moodle.zhaw.ch/pluginfile.php/2585021/mod_page/content/2/traveldata-export.xlsx |
+| traveldata-export.xlsx | Internal corporate travel logs (flights, trains, buses, rental cars) | In this project: ad24-2-fancyproject/traveldata-export.xlsx<br><br>On PODSV FS26 Moodle: https://moodle.zhaw.ch/pluginfile.php/2585021/mod_page/content/2/traveldata-export.xlsx |
 
 
 ### Details Dataset 1
 
-This dataset contains individual travel records for employees and guests, covering:
-- Travel mode (flight, train, bus, rental car)
-- Departure and arrival locations (IATA codes, cities, countries, continents, coordinates)
-- Flight‑specific attributes (aircraft type, haul type, travel class, flight number)
-- Emissions data (CO₂e with RFI 2.0 and RFI 2.7)
-- Distance travelled (km)
-- Business metadata (business unit, subunit, travel purpose)
-- Cost information (CHF)
-- Availability of train alternatives
+This dataset contains individual travel records for employees and guests, covering:<br>
+* Travel mode (flight, train, bus, rental car)
+* Departure and arrival locations (IATA codes, cities, countries, continents, coordinates)
+* Flight‑specific attributes (aircraft type, haul type, travel class, flight number)
+* Emissions data (CO₂e with RFI 2.0 and RFI 2.7)
+* Distance travelled (km)
+* Business metadata (business unit, subunit, travel purpose)
+* Cost information (CHF)
+* Availability of train alternatives<br>
 Each row represents a single travel segment.
 
-The data originates from the company’s internal travel management system, which aggregates bookings from airlines, rail operators, bus companies, and rental car providers.
-
+The data originates from the company’s internal travel management system, which aggregates bookings from airlines, rail operators, bus companies, and rental car providers.<br>
 The dataset was exported from the corporate travel system as an Excel file.
 
-Contains personal‑related business travel data, but no direct personal identifiers. Use is restricted to internal analytics and sustainability reporting.
-Category: Internal, business‑relevant
+Contains personal‑related business travel data, but no direct personal identifiers. Use is restricted to internal analytics and sustainability reporting.<br>
+Category: Internal, business‑relevant<br>
 Sensitivity: Medium (travel patterns may indirectly identify individuals)
 
-Independent variables: travel mode, distance, business unit, travel purpose, geography
+Independent variables: travel mode, distance, business unit, travel purpose, geography<br>
 Dependent variables: CO₂e emissions, cost
+
+<br>
 
 #### Data Catalogue
 : Data catalogue for the Dataset. {#tbl-data-catalogue}
@@ -68,13 +69,14 @@ Dependent variables: CO₂e emissions, cost
 |             26 | cost_CHF                    | float64        | 17.46 – 17273.18             | travel cost in CHF |
 |             27 | train_alternative_available | bool           | 2 unique values              | train option availability |
 
+<br>
 
 #### If applicable: Entity Relationship Diagram
 
 
 #### Data Chracteristics and Quality
 
-: Statistical overview of numericals {#tbl-data-catalogue}
+: Statistical overview of numericals {#tbl-num-stats}
 
 |                 |   count |        mean |         std |       min |       25% |       50% |        75% |        max |   missing_values |   unique_values |      mode |      range |        IQR |       variance |
 |:----------------|--------:|------------:|------------:|----------:|----------:|----------:|-----------:|-----------:|-----------------:|----------------:|----------:|-----------:|-----------:|---------------:|
@@ -87,10 +89,9 @@ Dependent variables: CO₂e emissions, cost
 | arrival_lon     |   25527 |    6.16772  |   36.4335   | -157.924  |   6.10895 |   8.54806 |   11.4041  |   174.805  |                0 |             485 |   8.54806 |   332.729  |    5.29515 | 1327.4         |
 | cost_CHF        |   25527 |  740.074    | 1233.26     |   17.46   | 214.98    | 434.05    |  659.125   | 17273.2    |                0 |           20395 |  67.25    | 17255.7    |  444.145   |    1.52093e+06 |
 
+<br>
 
-
-Numerical analyses
-: Analysis of numericals {#tbl-processed-overview}
+**Numerical analyses**<br>
 |                 |   unique_values |   missing_values |   missing_fraction |   zero_values |   zero_fraction |   negative_values |   negative_fraction |
 |:----------------|----------------:|-----------------:|-------------------:|--------------:|----------------:|------------------:|--------------------:|
 | CO2e RFI2 (t)   |            4248 |                0 |                  0 |             0 |               0 |                 0 |           0         |
@@ -102,12 +103,17 @@ Numerical analyses
 | arrival_lon     |             485 |                0 |                  0 |             0 |               0 |              3801 |           0.148901  |
 | cost_CHF        |           20395 |                0 |                  0 |             0 |               0 |                 0 |           0         |
 
+: Analysis of numericals {#tbl-num-view}
+
+<br>
+
 **Numerical frequency distribution**
 ```{python}
 #| label: freqdist-n
-#| fig-cap: "Frequency distribution of numericals"
 #| echo: true
 #| code-fold: true
+#| warning: false
+#| message: false
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -136,9 +142,11 @@ freq_num = {
 }
 
 for col in num_cols:
-    print(f"\n### Frequency distribution for **{col}**\n")
+    print(f"\n### Frequency distribution for {col}\n")
     display(freq_num[col])
 ```
+
+<br>
 
 **Histogram of numerical values**
 ```{python}
@@ -153,6 +161,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+<br>
+
 **Boxplots of numerical values**
 ```{python}
 #| label: box-n
@@ -166,7 +176,9 @@ plt.tight_layout()
 plt.show()
 ```
 
-**Correclation matrix heatmap of numerical variables**
+<br>
+
+**Correlation matrix heatmap of numerical variables**
 ```{python}
 #| label: corr-n
 #| fig-cap: "Correlation matrix heatmap of numericals"
@@ -181,10 +193,11 @@ plt.tight_layout()
 plt.show()
 ```
 
+<br>
+
 **Categorical analyses**
-: Analysis of categories: {#tbl-processed-overview}
 |                     |   unique_values |   missing_values | top_value      |
-|:--------------------|----------------:|-----------------:|---------------:|
+|:--------------------|----------------:|-----------------:|:---------------|
 | person_type         |               2 |                0 | employee       |
 | transport_mode      |               4 |                0 | flight         |
 | departure_iata      |             478 |                0 | ZRH            |
@@ -202,6 +215,11 @@ plt.show()
 | business_unit       |               4 |                0 | BU1            |
 | subunit             |              10 |                0 | Subunit 4.1    |
 | travel_purpose      |               6 |                0 | client_meeting |
+
+: **Analysis of categories** {#cat-overview}
+
+
+<br>
 
 **Frequency distributions of categorical variables**
 ```{python}
@@ -222,6 +240,8 @@ for col in cat_cols:
     print(f"\n### {col}\n")
     display(freq_cat[col])
 ```
+
+<br>
 
 **Correlation matrix heatmap of categorical variables**
 ```{python}
