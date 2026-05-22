@@ -14,14 +14,14 @@ The project is based on a single raw dataset downloaded from the link provided o
 ### Details Dataset 1
 
 This dataset contains individual travel records for employees and guests, covering:<br>
-* Travel mode (flight, train, bus, rental car)
-* Departure and arrival locations (IATA codes, cities, countries, continents, coordinates)
-* Flight‑specific attributes (aircraft type, haul type, travel class, flight number)
-* Emissions data (CO₂e with RFI 2.0 and RFI 2.7)
-* Distance travelled (km)
-* Business metadata (business unit, subunit, travel purpose)
-* Cost information (CHF)
-* Availability of train alternatives<br>
+- Travel mode (flight, train, bus, rental car)<br>
+- Departure and arrival locations (IATA codes, cities, countries, continents, coordinates)<br>
+- Flight‑specific attributes (aircraft type, haul type, travel class, flight number)<br>
+- Emissions data (CO₂e with RFI 2.0 and RFI 2.7)<br>
+- Distance travelled (km)<br>
+- Business metadata (business unit, subunit, travel purpose)<br>
+- Cost information (CHF)<br>
+- Availability of train alternatives<br>
 Each row represents a single travel segment.
 
 The data originates from the company’s internal travel management system, which aggregates bookings from airlines, rail operators, bus companies, and rental car providers.<br>
@@ -91,7 +91,10 @@ Dependent variables: CO₂e emissions, cost
 
 <br>
 
-**Numerical analyses**<br>
+**Numerical analyses**
+<br>
+: Analysis of numericals {#tbl-num-view}
+
 |                 |   unique_values |   missing_values |   missing_fraction |   zero_values |   zero_fraction |   negative_values |   negative_fraction |
 |:----------------|----------------:|-----------------:|-------------------:|--------------:|----------------:|------------------:|--------------------:|
 | CO2e RFI2 (t)   |            4248 |                0 |                  0 |             0 |               0 |                 0 |           0         |
@@ -103,7 +106,6 @@ Dependent variables: CO₂e emissions, cost
 | arrival_lon     |             485 |                0 |                  0 |             0 |               0 |              3801 |           0.148901  |
 | cost_CHF        |           20395 |                0 |                  0 |             0 |               0 |                 0 |           0         |
 
-: Analysis of numericals {#tbl-num-view}
 
 <br>
 
@@ -196,6 +198,9 @@ plt.show()
 <br>
 
 **Categorical analyses**
+
+: Analysis of categories {#cat-overview}
+
 |                     |   unique_values |   missing_values | top_value      |
 |:--------------------|----------------:|-----------------:|:---------------|
 | person_type         |               2 |                0 | employee       |
@@ -216,7 +221,6 @@ plt.show()
 | subunit             |              10 |                0 | Subunit 4.1    |
 | travel_purpose      |               6 |                0 | client_meeting |
 
-: **Analysis of categories** {#cat-overview}
 
 
 <br>
