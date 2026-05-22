@@ -7,10 +7,10 @@ def navbar():
         st.page_link("Booking.py", label="Booking", icon="✈️")
 
     with col2:
-        st.page_link("pages/europe.py", label="Europe", icon="🌍")
+        st.page_link("pages/Europe.py", label="Europe", icon="🌍")
 
     with col3:
-        st.page_link("pages/worldwide.py", label="Worldwide", icon="🗺️")
+        st.page_link("pages/Worldwide.py", label="Worldwide", icon="🗺️")
 
     with col4:
         st.page_link("pages/Your_Sustainability_Quiz.py", label="Quiz", icon="❓")

@@ -1,25 +1,28 @@
 # Project Charta
 
 ## Context and Scope
-The project examines the travel behaviour of a company’s employees, with a focus on air travel. The aim is to map out global travel routes and present their environmental impact transparently, based on CO₂ emissions and distances. The visualisation is intended to highlight which routes are flown particularly frequently and for which journeys realistic ground-based alternatives (e.g. rail) exist. The benefits lie in raising employees’ awareness of sustainable mobility and in supporting the internal sustainability strategy. The product will be published on the intranet and is aimed exclusively at employees.
+The Aurevia Group (change name of this company), a European technology services company with the four business units Sales & Customer Markets, Operations & Delivery, Technology & Innovation, and Corporate Services has commissioned NovaVista Digital Solutions (change name of this company) to redesign and unify its business‑travel processes. Historically, employees booked trips through inconsistent channels, ranging from self‑service to delegation to assistants, resulting in inefficiencies, limited transparency, and inconsistent data quality. At the same time, Aurevia aims to reduce CO₂ emissions by 5% per business unit each year.
+
+To address these challenges, the project introduces a multi‑page intranet dashboard that simplifies travel booking, visualizes travel patterns, and supports Aurevia’s sustainability goals. The dashboard includes a booking page for planning business trips, analytical pages showing European and global travel routes and emissions, a quiz to engage employees through gamification, and a feedback page for continuous improvement. The product is intended exclusively for employees and aims to foster awareness, transparency, and more consistent travel processes across the organization.
 
 
 ## Project Objectives and Success Criteria
-The primary goal of this project is to provide employees with a clear understanding of the company’s flight activity—how often flights are taken, where they go, and which routes could realistically be replaced by ground-based alternatives. The visualization is designed to foster internal dialogue around sustainable travel behavior and raise awareness of the environmental impact of business travel. It also serves the sustainability team by delivering data-driven insights to support internal communication and inform policy adjustments.
+The primary objective is to provide employees with a unified, intuitive platform for booking business trips and understanding company‑wide travel behavior. The dashboard should highlight frequently used routes, CO₂‑intensive travel patterns, and opportunities to shift from air to rail where feasible. It also supports Aurevia’s sustainability strategy by making CO₂ emissions visible at the business‑unit level and by motivating employees through gamification elements.
+- Success will be measured by the following criteria:
+- Employees can complete a travel booking in under two minutes.
+- The most frequently used routes and top CO₂‑intensive routes are identifiable within 10 seconds.
+- Business units can clearly track their progress toward the –5% annual CO₂‑reduction target.
+- Routes with viable train alternatives are distinctly marked.
+- The feedback page generates meaningful suggestions for further development.
 
-Success will be measured by several criteria:
-* Employees should be able to identify the most frequently used flight routes within 10 seconds.
-* The top 5 CO₂-intensive routes must be clearly highlighted.
-* Routes with viable train alternatives should be distinctly marked and filterable.
-* At least 70% of test users should report that the visualization improved their understanding of the environmental impact of company travel.
-
-The project explicitly excludes individual-level assessments, automated travel recommendations, and real-time data integration.
+The project explicitly excludes real‑time price comparisons, automated travel recommendations, and individual‑level CO₂ assessments.
 
 ## Stakeholder Analysis
-- Staff (all): should be kept informed and be able to reflect on their travel habits.
-- Sustainability team: uses the visualisation for internal communication and strategy development.
-- HR/Travel Management: interested in costs, travel policies and opportunities for optimisation.
-- IT/Intranet team: responsible for technical integration and deployment.
+- Employees (all): use the booking page, analytics pages, quiz, and feedback form
+- BU Leadership: monitors CO₂ performance and gamification points
+- Sustainability team: uses the analytics pages for internal communication and strategy development
+- HR/Travel Management: interested in process standardization, cost transparency and opportunities for optimisation
+- IT/Intranet team: responsible for technical integration, deployment and performance
 
 Stakeholder Map:
 ![Stakeholder Map](pics/stakeholder_map.png)
@@ -32,7 +35,7 @@ Analyse the target audience of the visualization product and create at least 2 p
 ### Robert, 55 years
 ::: {.grid}
 ::: {.g-col-8}
-Robert has been with the company for over 20 years and is highly experienced in his professional domain. However, he has limited exposure to sustainability topics and tends to be skeptical about climate-related initiatives. His data literacy is moderate, he can interpret simple charts but struggles with complex analytics. He primarily works on a desktop in the office and occasionally uses a laptop. His engagement with internal tools is infrequent and usually triggered by topical discussions or curiosity.
+Robert has been with the company for over 20 years and works in Sales & Customer Markets. He is highly experienced in his field but has limited exposure to sustainability topics and tends to be skeptical about climate‑related initiatives. His data literacy is moderate; he can interpret simple charts but struggles with complex analytics. He frequently travels to meet clients and therefore uses both his office desktop and his laptop while on the move. He uses internal tools infrequently, usually only when necessary for his work.
 :::
 
 ::: {.g-col-4}
@@ -40,14 +43,14 @@ Robert has been with the company for over 20 years and is highly experienced in 
 :::
 :::
 
-**User tasks:** Robert wants to understand how much the company actually flies and whether his own travel behavior is significant in comparison.  
+**User tasks:** Robert wants to book trips quickly and understand major travel patterns without being overwhelmed.  
 **Pains:** He is skeptical of climate messaging and feels overwhelmed by overly complex visualizations. He is also wary of sustainability communication that feels moralizing or prescriptive.  
 **Gains:** Robert responds well to clear, neutral facts presented without judgment. He appreciates intuitive visualizations that allow him to form his own opinion based on data.
 
 ### Sara, 28 years
 ::: {.grid}
 ::: {.g-col-8}
-Sara recently joined the company and works in the sustainability strategy unit. She has strong domain expertise in climate and environmental topics and is comfortable working with CO₂ data. Her data literacy is high, and she frequently uses her laptop in mobile settings. She engages with internal tools regularly, especially when preparing presentations or internal discussions.
+Sara works in Operations & Delivery, where she coordinates cross‑functional projects and ensures smooth execution of operational processes. Her familiarity with CO₂ data comes from a combination of professional exposure — Operations & Delivery regularly evaluates efficiency, resource usage, and travel patterns — and personal interest in sustainability. She has high data literacy, uses her laptop frequently in mobile settings, and engages with internal tools regularly to prepare discussions, identify improvement opportunities, and support more sustainable decision‑making.
 :::
 
 ::: {.g-col-4}
@@ -55,21 +58,33 @@ Sara recently joined the company and works in the sustainability strategy unit. 
 :::
 :::
 
-**User tasks:** Sara aims to identify emission hotspots, gather arguments for more sustainable travel policies, and raise awareness among colleagues.  
-**Pains:** She struggles with the lack of transparency around actual travel behavior and finds it challenging to communicate complex data in a way that resonates with skeptical audiences. Internal resistance to sustainability topics is a recurring obstacle.  
-**Gains:** Sara values visually compelling and easy-to-understand representations of data. She seeks tools that help her highlight concrete savings potential and support her internal advocacy efforts.
+**User tasks:** Sara aims to identify emission hotspots, compare business‑unit performance, and communicate insights effectively.  
+**Pains:** She struggles with the lack of transparency in current travel data and finds it difficult to communicate complex information to skeptical colleagues.
+**Gains:** She values clear, visually compelling representations that support her advocacy for more sustainable travel.
 
 ## Situation Assessment
-The project is supported by a comprehensive dataset containing flight routes, CO₂ emissions, travel distances, transport modes, train alternatives, travel costs, and geographic coordinates. These data points enable both spatial and environmental analysis of business travel patterns. The technical implementation will rely on tools such as Python for data processing, Quarto for documentation and visualization, and Leaflet or Plotly for interactive mapping. The final product will be deployed within the company’s intranet environment to ensure accessibility for all employees. Personnel involved include the sustainability team (as project initiators and domain experts), a data analyst (for data preparation and visualization logic), and IT support (for integration and performance optimization within the intranet).
+The project is supported by a comprehensive dataset containing flight and train routes, CO₂ emissions, distances, travel frequencies, business‑unit assignments, transport modes, and geographic coordinates. These data enable both spatial and environmental analysis of business travel patterns.
 
-Key constraints include strict adherence to data privacy, no individual-level assessments will be conducted, and the requirement that the dashboard performs reliably within the intranet infrastructure. Potential risks include misinterpretation of the data by employees, skepticism toward sustainability messaging, and technical limitations in rendering complex interactive maps. These risks will be mitigated through clear visual design, neutral framing of insights, and performance testing prior to deployment.
+The dashboard consists of five pages:
+- A Booking page for planning trips and comparing flight and rail options.
+- A Europe analytics page showing frequently flown routes, CO₂ hotspots, and BU performance.
+- A Worldwide analytics page with global travel patterns.
+- A Quiz page that engages employees through character outcomes.
+- A Feedback page for collecting suggestions and improvement ideas.
+
+Technical implementation relies on Python and Streamlit for data processing and interactive visualization. The dashboard will be deployed on the company’s intranet to ensure accessibility. Key constraints include data privacy, performance requirements, and the need for neutral communication to avoid resistance among skeptical users. Risks include misinterpretation of CO₂ data, skepticism toward sustainability messaging, and technical limitations when rendering complex maps. These risks will be mitigated through clear visual design, neutral framing, and performance testing.
 
 ## Visualization Concept
 Translate the project objectives into a concrete visualization concept. This corresponds to the value map side of the Value Proposition Canvas [@Osterwalder2014] – describe how the proposed visualization product addresses the users' tasks, relieves their pains and creates gains. Address the following aspects:
 
-* **Product form**: Interactive world map with flight routes , supplemented by filters and brief explanatory texts.
-* **Visual encodings**: Line colour = CO₂ emissions (e.g. blue → red). Line width = number of journeys or total emissions per route. Icons or markers for rail alternatives.
-* **Interactivity**: Filters by time period, business unit, mode of transport. Tooltip showing CO₂, distance, number of flights, rail alternative. Zoom and pan for global and regional views.
+* **Product form**: The product consists of five interactive pages:
+(1) a booking interface for planning business trips and comparing flight and train options,
+(2) a European analytics page showing frequently used routes, CO₂ hotspots, and business‑unit performance,
+(3) a global analytics page with the same logic applied worldwide,
+(4) a quiz page that engages employees through character outcomes, and
+(5) a feedback page for collecting suggestions and improvement ideas.
+* **Visual encodings**: Line color represents the travel mode.
+* **Interactivity**: Filters by time period, business unit, departure and arrival city. Tooltips provide contextural information such as CO₂ emissions, distance and availability of train alternatives. Maps support zooming and panning for both global and regional exploration. The booking page dynamically updates travel time, CO₂ impact, and gamification points based on user input.
 * **Narrative and annotation**: The visualization begins with a simple and accessible introduction: “How we travel as a company.” It highlights the five routes with the highest CO₂ emissions to give users an immediate sense of where the greatest environmental impact occurs. The dashboard also points out where train alternatives exist and how much potential reduction in emissions these alternatives could offer. Throughout the presentation, the tone remains neutral and fact‑based, ensuring that the information is conveyed without moral pressure, an approach that is particularly important for users like Robert, who may be skeptical of sustainability messaging.
 * **Target medium and integration**: Integration as an HTML widget on the intranet. Optimised for desktop use, compatible with mobile devices.
 
