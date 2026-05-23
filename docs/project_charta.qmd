@@ -1,13 +1,13 @@
 # Project Charta
 
 ## Context and Scope
-The Aurevia Group (change name of this company), a European technology services company with the four business units Sales & Customer Markets, Operations & Delivery, Technology & Innovation, and Corporate Services has commissioned NovaVista Digital Solutions (change name of this company) to redesign and unify its business‑travel processes. Historically, employees booked trips through inconsistent channels, ranging from self‑service to delegation to assistants, resulting in inefficiencies, limited transparency, and inconsistent data quality. At the same time, Aurevia aims to reduce CO₂ emissions by 5% per business unit each year.
+The Mellontes Group, a European technology services company with the four business units Sales & Customer Markets, Operations & Delivery, Technology & Innovation and Corporate Services has commissioned Scaya Digital Solutions to redesign and unify its business‑travel processes. Historically, employees booked trips through inconsistent channels, ranging from self‑service to delegation to assistants, resulting in inefficiencies, limited transparency, and inconsistent data quality. At the same time, Mellontes aims to reduce CO₂ emissions by 5% per business unit each year.
 
-To address these challenges, the project introduces a multi‑page intranet dashboard that simplifies travel booking, visualizes travel patterns, and supports Aurevia’s sustainability goals. The dashboard includes a booking page for planning business trips, analytical pages showing European and global travel routes and emissions, a quiz to engage employees through gamification, and a feedback page for continuous improvement. The product is intended exclusively for employees and aims to foster awareness, transparency, and more consistent travel processes across the organization.
+To address these challenges, the project introduces a multi‑page intranet dashboard that simplifies travel booking, visualizes travel patterns, and supports Mellontes sustainability goals. The dashboard includes a booking page for planning business trips, analytical pages showing European and global travel routes and emissions, a quiz to engage employees through gamification, and a feedback page for continuous improvement. The product is intended exclusively for employees and aims to foster awareness, transparency, and more consistent travel processes across the organization.
 
 
 ## Project Objectives and Success Criteria
-The primary objective is to provide employees with a unified, intuitive platform for booking business trips and understanding company‑wide travel behavior. The dashboard should highlight frequently used routes, CO₂‑intensive travel patterns, and opportunities to shift from air to rail where feasible. It also supports Aurevia’s sustainability strategy by making CO₂ emissions visible at the business‑unit level and by motivating employees through gamification elements.
+The primary objective is to provide employees with a unified, intuitive platform for booking business trips and understanding company‑wide travel behavior. The dashboard should highlight frequently used routes, CO₂‑intensive travel patterns, and opportunities to shift from air to rail where feasible. It also supports Mellontes sustainability strategy by making CO₂ emissions visible at the business‑unit level and by motivating employees through gamification elements.
 - Success will be measured by the following criteria:
 - Employees can complete a travel booking in under two minutes.
 - The most frequently used routes and top CO₂‑intensive routes are identifiable within 10 seconds.
@@ -59,7 +59,7 @@ Sara works in Operations & Delivery, where she coordinates cross‑functional pr
 :::
 
 **User tasks:** Sara aims to identify emission hotspots, compare business‑unit performance, and communicate insights effectively.  
-**Pains:** She struggles with the lack of transparency in current travel data and finds it difficult to communicate complex information to skeptical colleagues.
+**Pains:** She struggles with the lack of transparency in current travel data and finds it difficult to communicate complex information to skeptical colleagues.  
 **Gains:** She values clear, visually compelling representations that support her advocacy for more sustainable travel.
 
 ## Situation Assessment
@@ -86,7 +86,7 @@ Translate the project objectives into a concrete visualization concept. This cor
 * **Visual encodings**: Line color represents the travel mode.
 * **Interactivity**: Filters by time period, business unit, departure and arrival city. Tooltips provide contextural information such as CO₂ emissions, distance and availability of train alternatives. Maps support zooming and panning for both global and regional exploration. The booking page dynamically updates travel time, CO₂ impact, and gamification points based on user input.
 * **Narrative and annotation**: The journey through the dashboard starts with a booking page for employees. Here, users like Robert and Sara can compare flight and train options for a specific trip, see travel time and, where available, train alternatives. This page focuses on individual decisions and makes the consequences of a single booking transparent in a neutral, non‑moralising way. From there, the Europe – Company Business Travel & CO₂ page provides a broader, company‑wide perspective.
-Employees can filter by year, Business Unit and destination to explore how Aurevia travels across Europe: a map shows the main routes, while KPIs summarise total trips, total CO₂ and the most important routes. In addition, a CO₂ reduction trend visualises how each Business Unit is progressing towards Aurevia’s –5 % annual reduction target, making the long‑term impact of travel behaviour visible over time. The overall narrative connects individual booking decisions with the collective footprint of the company, always in a fact‑based and supportive tone, so that employees can reflect and explore without feeling pressured.
+Employees can filter by year, Business Unit and destination to explore how Mellontes travels across Europe: a map shows the main routes, while KPIs summarise total trips, total CO₂ and the most important routes. In addition, a CO₂ reduction trend visualises how each Business Unit is progressing towards Mellonts –5 % annual reduction target, making the long‑term impact of travel behaviour visible over time. The overall narrative connects individual booking decisions with the collective footprint of the company, always in a fact‑based and supportive tone, so that employees can reflect and explore without feeling pressured.
 * **Target medium and integration**: Integration as an HTML widget on the intranet. Optimised for desktop use, compatible with mobile devices.
 
 
