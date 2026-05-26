@@ -70,7 +70,7 @@ with info_col:
     st.markdown(
         """
         <div style='font-size:20px; color:#444; margin-top:-8px; margin-bottom:25px;'>
-            This page provides you an overview of Aurevia’s European business travel patterns 
+            This page provides you an overview of Mellontes European business travel patterns 
             and shows how travel behaviour impacts CO₂ emissions across all Business Units. 
             It helps to understand where we travel most, how our emissions are distributed 
             and how we war progressing toward Aurevia's annual -5% CO₂ reduction target.
