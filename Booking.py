@@ -201,7 +201,13 @@ if not row.empty:
     col4.metric("Efficiency", "Good ✅" if train_time_h < 10 else "Poor ❌")
     col5.metric("Gamification points", "Yes" if booking_choice == "Train" else "No")
 
-    # col6 nur EINMAL aufrufen
+    # col6: Planet impact message
+    # font size reducing for messages longer than 10 characters
+    with col6:
+         st.markdown(
+            f"<div style='font-size:14px;'>{'Planet impact 🌍'}</div>",
+            unsafe_allow_html=True
+        )
     if booking_choice == "Train" and train_possible:
         impact_messages = [
             "Like skipping 3 weeks of driving to work 🚗❌",
