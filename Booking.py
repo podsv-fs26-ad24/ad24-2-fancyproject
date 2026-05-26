@@ -217,11 +217,11 @@ if not row.empty:
             msg = "Flying emits much more CO₂"
 
         st.markdown(f"""
-            <div style='font-size:11px; color:#888; font-weight:600; 
+            <div style='font-size:16px; color:#888; font-weight:600; 
                         letter-spacing:0.05em; margin-bottom:4px'>
                 PLANET IMPACT 🌍
             </div>
-            <div style='font-size:12px; color:#1a1a1a; font-weight:500;
+            <div style='font-size:14px; color:#1a1a1a; font-weight:500;
                         line-height:1.4'>
                 {msg}
             </div>
