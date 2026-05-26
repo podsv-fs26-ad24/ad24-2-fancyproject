@@ -203,23 +203,29 @@ if not row.empty:
 
     # col6: Planet impact message
     # font size reducing for messages longer than 10 characters
+
     with col6:
-         st.markdown(
-            f"<div style='font-size:14px;'>{'Planet impact 🌍'}</div>",
-            unsafe_allow_html=True
-        )
-    if booking_choice == "Train" and train_possible:
-        impact_messages = [
-            "Like skipping 3 weeks of driving to work 🚗❌",
-            "Equal to what 1 tree absorbs in a year 🌳",
-            "Same impact as turning off your home for a full day 💡",
-            "As good as avoiding 120 plastic bottles 🧴"
-        ]
-        col6.metric("Planet impact 🌍", random.choice(impact_messages))
-    else:
-        col6.metric("Planet impact 🌍", "Flying emits much more CO₂")
+        if booking_choice == "Train" and train_possible:
+            impact_messages = [
+                "Like skipping 3 weeks of driving to work 🚗❌",
+                "Equal to what 1 tree absorbs in a year 🌳",
+                "Same impact as turning off your home for a full day 💡",
+                "As good as avoiding 120 plastic bottles 🧴"
+            ]
+            msg = random.choice(impact_messages)
+        else:
+            msg = "Flying emits much more CO₂"
 
-
+        st.markdown(f"""
+            <div style='font-size:11px; color:#888; font-weight:600; 
+                        letter-spacing:0.05em; margin-bottom:4px'>
+                PLANET IMPACT 🌍
+            </div>
+            <div style='font-size:12px; color:#1a1a1a; font-weight:500;
+                        line-height:1.4'>
+                {msg}
+            </div>
+        """, unsafe_allow_html=True)
 
 # ---------------------------------------------------
 # FULL-WIDTH BOOKING + SCOREBOARD
