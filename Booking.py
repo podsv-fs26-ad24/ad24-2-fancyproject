@@ -193,12 +193,24 @@ if not row.empty:
     train_hm = h_to_hm(train_time_h)
     flight_hm = h_to_hm(flight_time_h)
 
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
     col1.metric("Train alternative", "Yes 🚆" if train_possible else "No ❌")
     col2.metric("Flight time", flight_hm)
     col3.metric("Train time", train_hm if train_possible else " --")
     col4.metric("Efficiency", "Good ✅" if train_time_h < 10 else "Poor ❌")
     col5.metric("Gamification points", "Yes" if booking_choice == "Train" else "No")
+
+    # col6 nur EINMAL aufrufen
+    if booking_choice == "Train" and train_possible:
+        impact_messages = [
+            "Like skipping 3 weeks of driving to work 🚗❌",
+            "Equal to what 1 tree absorbs in a year 🌳",
+            "Same impact as turning off your home for a full day 💡",
+            "As good as avoiding 120 plastic bottles 🧴"
+        ]
+        col6.metric("Planet impact 🌍", "Positive", impact_messages[0])
+    else:
+        col6.metric("Planet impact 🌍", "None", "Flying emits much more CO₂")
 
 
 
