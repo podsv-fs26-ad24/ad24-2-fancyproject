@@ -8,7 +8,6 @@ st.set_page_config(page_title="Europe – Business Travel", layout="wide")
 from components.navbar import navbar
 navbar()
 
-
 @st.cache_data
 def load_data():
     df = pd.read_excel("traveldata-export.xlsx")
@@ -53,8 +52,8 @@ bu_colors = {
 
 # st.title("Europe – Company Business Travel & CO₂")
 
-title_col, space = st.columns([4, 4])
-info_col, space = st.columns([4, 4])
+title_col, space = st.columns([4, 3])
+info_col, space = st.columns([4, 3])
 
 with title_col:
     st.markdown(
@@ -368,7 +367,7 @@ with col_date:
 # ---------------- TARGET TRACKING ----------------
 with col_target:
 
-    df_trend = df[df["year"] <= 2025]
+    df_trend = df_eu[df_eu["year"] <= 2025]
 
     # CO₂ pro Jahr und Business Unit
     co2_by_year_bu = (
@@ -444,7 +443,7 @@ with target_plot:
     days_in_year = 366 if sim_year % 4 == 0 else 365
     year_frac = sim_year + (sim_day_of_year - 1) / days_in_year
     
-    df_trend = df[df["year"] <= sim_year]
+    df_trend = df_eu[df_eu["year"] <= sim_year]
     
     co2_by_year_bu = (
         df_trend.groupby(["year", "business_unit"])["CO2e RFI2.7 (t)"]

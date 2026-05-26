@@ -3,12 +3,12 @@
 ## Context and Scope
 The Mellontes Group, a European technology services company with the four business units Sales & Customer Markets, Operations & Delivery, Technology & Innovation and Corporate Services has commissioned Scaya Digital Solutions to redesign and unify its business‑travel processes. Historically, employees booked trips through inconsistent channels, ranging from self‑service to delegation to assistants, resulting in inefficiencies, limited transparency, and inconsistent data quality. At the same time, Mellontes aims to reduce CO₂ emissions by 5% per business unit each year.
 
-To address these challenges, the project introduces a multi‑page intranet dashboard that simplifies travel booking, visualizes travel patterns, and supports Mellontes sustainability goals. The dashboard includes a booking page for planning business trips, analytical pages showing European and global travel routes and emissions, a quiz to engage employees through gamification, and a feedback page for continuous improvement. The product is intended exclusively for employees and aims to foster awareness, transparency, and more consistent travel processes across the organization.
+To address these challenges, the project introduces a multi‑page intranet dashboard that simplifies travel booking, visualizes travel patterns, and supports Mellontes sustainability goals. The dashboard includes a booking page for planning business trips, analytical pages showing European and global travel routes and emissions, a quiz that adds a touch of fun to the dashboard experience and a feedback page for continuous improvement. The product is intended exclusively for employees and aims to foster awareness, transparency, and more consistent travel processes across the organization.
 
 
 ## Project Objectives and Success Criteria
 The primary objective is to provide employees with a unified, intuitive platform for booking business trips and understanding company‑wide travel behavior. The dashboard should highlight frequently used routes, CO₂‑intensive travel patterns, and opportunities to shift from air to rail where feasible. It also supports Mellontes sustainability strategy by making CO₂ emissions visible at the business‑unit level and by motivating employees through gamification elements.
-- Success will be measured by the following criteria:
+Success will be measured by the following criteria:
 - Employees can complete a travel booking in under two minutes.
 - The most frequently used routes and top CO₂‑intensive routes are identifiable within 10 seconds.
 - Business units can clearly track their progress toward the –5% annual CO₂‑reduction target.

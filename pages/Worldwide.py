@@ -52,7 +52,35 @@ bu_colors = {
     "Corporate Services": "#009B72"
 }
 
-st.title("Worldwide – Company Business Travel & CO₂")
+# st.title("Worldwide – Company Business Travel & CO₂")
+
+title_col, space = st.columns([5, 3])
+info_col, space = st.columns([4, 3])
+
+with title_col:
+    st.markdown(
+        """
+        <h1 style='font-size:50px; margin-bottom:0px;'>
+            Worldwide – Company Business Travel & CO₂
+        </h1>
+        """,
+        unsafe_allow_html=True
+    )
+
+with info_col:
+    st.markdown(
+        """
+        <div style='font-size:20px; color:#444; margin-top:-8px; margin-bottom:25px;'>
+            This page provides you an overview of Mellontes Worldwide business travel patterns 
+            and shows how travel behaviour impacts CO₂ emissions across all Business Units. 
+            It helps to understand where we travel most, how our emissions are distributed 
+            and how we war progressing toward Aurevia's annual -5% CO₂ reduction target.
+            The KPIs summarise total travels, total emissions, the most frequent route, 
+            and whether a train alternative exists within the selected filters.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # ---------------------------------------------------
 # FILTER + KPI + MAP (SIDE BY SIED)
@@ -208,9 +236,9 @@ with map_col:
         fig.update_layout(
             height=550,
             geo=dict(
-                projection_type="natural earth",
-                lonaxis=dict(range=[-15, 35]),
-                lataxis=dict(range=[35, 70]),
+                projection_type="orthographic",
+                # lonaxis=dict(range=[-15, 35]),
+                # lataxis=dict(range=[35, 70]),
                 showland=True,
                 landcolor="#e8f0f8",
                 showocean=True,
