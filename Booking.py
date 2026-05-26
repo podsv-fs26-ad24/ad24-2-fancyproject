@@ -3,6 +3,7 @@ import pandas as pd
 import plotly
 import plotly.graph_objects as go
 import math
+import random
 
 st.set_page_config(
     page_title="Booking – Europe & Worldwide",
@@ -208,9 +209,9 @@ if not row.empty:
             "Same impact as turning off your home for a full day 💡",
             "As good as avoiding 120 plastic bottles 🧴"
         ]
-        col6.metric("Planet impact 🌍", "Positive", impact_messages[0])
+        col6.metric("Planet impact 🌍", random.choice(impact_messages))
     else:
-        col6.metric("Planet impact 🌍", "None", "Flying emits much more CO₂")
+        col6.metric("Planet impact 🌍", "Flying emits much more CO₂")
 
 
 
