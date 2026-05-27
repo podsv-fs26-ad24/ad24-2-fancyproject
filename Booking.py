@@ -13,6 +13,28 @@ st.set_page_config(
 from components.navbar import navbar
 navbar()
 
+# ⬇️ HIER CSS EINSETZEN
+st.markdown("""
+<style>
+div[data-testid="stMetricLabel"] > div {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #444 !important;
+}
+div[data-testid="stMetricValue"] > div {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #111 !important;
+}
+div[data-testid="stMetricDelta"] > div {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ---------------------------------------------------
 # DATA LOADING
 # ---------------------------------------------------
