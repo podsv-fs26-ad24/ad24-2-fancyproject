@@ -246,7 +246,7 @@ if not row.empty:
     with col6:
         if booking_choice == "Train" and train_possible:
             impact_messages = [
-                "Like skipping 3 weeks of driving to work 🚗❌",
+                "Like skipping 3 weeks of driving to work 🚗",
                 "Equal to what 1 tree absorbs in a year 🌳",
                 "Same impact as turning off your home for a full day 💡",
                 "As good as avoiding 120 plastic bottles 🧴"
