@@ -15,7 +15,29 @@ navbar()
 
 st.markdown("""
 <style>
-/* Planet Impact – Titel */
+/* 🔹 Metric-Label (oben) */
+div[data-testid="stMetricLabel"] > div {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #444 !important;
+}
+
+/* 🔹 Metric-Wert (gross) */
+div[data-testid="stMetricValue"] > div {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #111 !important;
+}
+
+/* 🔹 Metric-Delta (falls genutzt) */
+div[data-testid="stMetricDelta"] > div {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px !important;
+}
+
+/* 🔹 Planet Impact – Titel (col6) */
 .planet-impact-title {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
@@ -25,11 +47,11 @@ st.markdown("""
     margin-bottom: 4px;
 }
 
-/* Planet Impact – Text */
+/* 🔹 Planet Impact – Text (col6, wie Metric-Wert) */
 .planet-impact-text {
     font-family: 'Inter', sans-serif;
-    font-size: 20px;        /* gleiche Größe wie Metric-Werte */
-    font-weight: 700;       /* gleiche Stärke wie Metric-Werte */
+    font-size: 20px;
+    font-weight: 700;
     color: #111;
     line-height: 1.4;
 }
