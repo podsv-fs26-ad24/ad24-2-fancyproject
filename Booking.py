@@ -36,7 +36,7 @@ div[data-testid="stMetricValue"] > div {
 .planet-impact-title {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 400;
     color: #444;
     letter-spacing: 0.05em;
 }
