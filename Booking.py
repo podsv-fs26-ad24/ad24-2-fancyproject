@@ -35,7 +35,7 @@ div[data-testid="stMetricValue"] > div {
 /* Planet Impact – Titel (identisch zu Metric-Label) */
 .planet-impact-title {
     font-family: 'Inter', sans-serif;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     color: #444;
     letter-spacing: 0.05em;
