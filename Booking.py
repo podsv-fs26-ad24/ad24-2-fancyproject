@@ -38,7 +38,7 @@ div[data-testid="stMetricValue"] > div {
     font-size: 12px;
     font-weight: 400;
     color: #444;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
 }
 
 /* Planet Impact – Text (identisch zu Metric-Wert) */
