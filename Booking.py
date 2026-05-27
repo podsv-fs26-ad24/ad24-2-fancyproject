@@ -243,8 +243,6 @@ if not row.empty:
     col5.metric("Gamification points", "Yes" if booking_choice == "Train" else "No")
 
     # col6: Planet impact message
-    # font size reducing for messages longer than 10 characters
-
     with col6:
         if booking_choice == "Train" and train_possible:
             impact_messages = [
@@ -258,7 +256,7 @@ if not row.empty:
             msg = "Flying emits much more CO₂"
 
         st.markdown(f"""
-            <div class='planet-impact-title'>PLANET IMPACT 🌍</div>
+            <div class='planet-impact-title'>Planet Impact</div>
             <div class='planet-impact-text'>{msg}</div>
         """, unsafe_allow_html=True)
 
