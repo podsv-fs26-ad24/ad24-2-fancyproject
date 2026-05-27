@@ -13,27 +13,29 @@ st.set_page_config(
 from components.navbar import navbar
 navbar()
 
-# ⬇️ HIER CSS EINSETZEN
 st.markdown("""
 <style>
-div[data-testid="stMetricLabel"] > div {
+/* Planet Impact – Titel */
+.planet-impact-title {
     font-family: 'Inter', sans-serif;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #444 !important;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
 }
-div[data-testid="stMetricValue"] > div {
+
+/* Planet Impact – Text */
+.planet-impact-text {
     font-family: 'Inter', sans-serif;
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    color: #111 !important;
-}
-div[data-testid="stMetricDelta"] > div {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px !important;
+    font-size: 20px;        /* gleiche Größe wie Metric-Werte */
+    font-weight: 700;       /* gleiche Stärke wie Metric-Werte */
+    color: #111;
+    line-height: 1.4;
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ---------------------------------------------------
 # DATA LOADING
