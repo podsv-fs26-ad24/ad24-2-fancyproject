@@ -15,15 +15,16 @@ navbar()
 
 st.markdown("""
 <style>
-/* 🔹 Metric-Label (oben) */
+/* Metric-Label (oben) */
 div[data-testid="stMetricLabel"] > div {
     font-family: 'Inter', sans-serif;
     font-size: 14px !important;
     font-weight: 600 !important;
     color: #444 !important;
+    letter-spacing: 0.05em;
 }
 
-/* 🔹 Metric-Wert (gross) */
+/* Metric-Wert (gross) */
 div[data-testid="stMetricValue"] > div {
     font-family: 'Inter', sans-serif;
     font-size: 20px !important;
@@ -31,13 +32,7 @@ div[data-testid="stMetricValue"] > div {
     color: #111 !important;
 }
 
-/* 🔹 Metric-Delta (falls genutzt) */
-div[data-testid="stMetricDelta"] > div {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px !important;
-}
-
-/* 🔹 Planet Impact – Titel (col6) */
+/* Planet Impact – Titel (identisch zu Metric-Label) */
 .planet-impact-title {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
@@ -45,9 +40,10 @@ div[data-testid="stMetricDelta"] > div {
     color: #444;
     letter-spacing: 0.05em;
     margin-bottom: 4px;
+    text-transform: uppercase; 
 }
 
-/* 🔹 Planet Impact – Text (col6, wie Metric-Wert) */
+/* Planet Impact – Text (identisch zu Metric-Wert) */
 .planet-impact-text {
     font-family: 'Inter', sans-serif;
     font-size: 20px;
@@ -57,6 +53,7 @@ div[data-testid="stMetricDelta"] > div {
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # ---------------------------------------------------
