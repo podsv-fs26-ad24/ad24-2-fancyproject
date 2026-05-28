@@ -274,7 +274,7 @@ with right:
 
 
 # ---------------------------------------------------
-# BOOKING EMAIL + SCOREBOARD (unverändert)
+# BOOKING EMAIL + SCOREBOARD
 # ---------------------------------------------------
 secretary_email = "secretariat@company.com"
 
@@ -299,3 +299,80 @@ email_body += "\nThank you."
 if st.button("📧 Generate booking email"):
     st.code(email_body)
     st.success(f"Email successfully sent to – {secretary_email}.")
+
+    # ---------------------------------------------------
+    # GAMIFICATION MESSAGE (only if train possible + chosen)
+    # ---------------------------------------------------
+    if train_possible and booking_choice == "Train":
+        st.markdown("""
+        ### 🌟 Good job!
+        You made the planet a bit greener 🌱
+        """)
+
+    # ---------------------------------------------------
+    # SCOREBOARD (always shown after booking)
+    # ---------------------------------------------------
+    scoreboard = pd.DataFrame({
+        "Team": ["Sales & Customer Markets", "Operations & Delivery", "Technology & Innovation", "Corporate Services"],
+        "Points": [140, 135, 110, 90]
+    })
+
+    scoreboard = scoreboard.sort_values(by="Points", ascending=False).reset_index(drop=True)
+    scoreboard.insert(0, "Rank", range(1, len(scoreboard) + 1))
+
+    max_pts = scoreboard["Points"].max()
+
+    rank_styles = {
+        1: "background:#FAEEDA;color:#633806",
+        2: "background:#F1EFE8;color:#444441",
+        3: "background:#FAECE7;color:#712B13",
+    }
+    bar_colors = {
+        1: "#F09920",
+        2: "#9DD8D1",
+        3: "#D85A30",
+        4: "#636361",
+    }
+
+    rows_html = ""
+    for _, row in scoreboard.iterrows():
+        r = int(row["Rank"])
+        badge_style = rank_styles.get(r, "background:#f0f0f0;color:#888888")
+        bar_color = bar_colors.get(r, "#C8C6BE")
+        bar_pct = int(row["Points"] / max_pts * 100)
+        rows_html += f"""
+        <tr style="border-bottom:0.5px solid #e8e8e8;">
+          <td style="padding:12px 16px;vertical-align:middle;width:56px">
+            <span style="display:inline-flex;align-items:center;justify-content:center;
+              width:28px;height:28px;border-radius:50%;font-size:13px;font-weight:600;
+              {badge_style}">{r}</span>
+          </td>
+          <td style="padding:12px 16px;vertical-align:middle">
+            <div style="font-weight:600;font-size:14px;color:#1a1a1a;margin-bottom:5px">{row['Team']}</div>
+            <div style="background:#eeeeee;border-radius:3px;height:5px;width:100%">
+              <div style="width:{bar_pct}%;height:5px;background:{bar_color};border-radius:3px"></div>
+            </div>
+          </td>
+          <td style="padding:12px 16px;text-align:right;font-weight:600;font-size:16px;
+            color:#1a1a1a;vertical-align:middle;width:80px">
+            {int(row['Points'])}
+          </td>
+        </tr>"""
+
+    table_html = f"""
+    <table style="width:100%;border-collapse:collapse;font-family:sans-serif;
+      border:0.5px solid #e0e0e0;border-radius:10px;overflow:hidden">
+      <thead>
+        <tr style="background:#f7f7f7;border-bottom:1px solid #e0e0e0">
+          <th style="padding:10px 16px;text-align:left;font-size:11px;color:#999999;
+            font-weight:600;letter-spacing:0.06em;width:56px">RANK</th>
+          <th style="padding:10px 16px;text-align:left;font-size:11px;color:#999999;
+            font-weight:600;letter-spacing:0.06em">TEAM</th>
+          <th style="padding:10px 16px;text-align:right;font-size:11px;color:#999999;
+            font-weight:600;letter-spacing:0.06em;width:80px">POINTS</th>
+        </tr>
+      </thead>
+      <tbody>{rows_html}</tbody>
+    </table>"""
+
+    st.markdown(table_html, unsafe_allow_html=True)
