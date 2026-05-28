@@ -211,7 +211,7 @@ with map_col:
         for idx, r in routes.iterrows():
 
             if r["train_alt"] == 1:
-                line_color = "#83781B"   # train alternativ
+                line_color = "#83781B"   # train alternative
             else:
                 line_color = "#DCC9B6"   # flight
 
