@@ -55,7 +55,7 @@ bu_colors = {
 # st.title("Worldwide – Company Business Travel & CO₂")
 
 title_col, space = st.columns([4, 1])
-info_col, space = st.columns([4, 1])
+info_col, space = st.columns([6, 1])
 
 with title_col:
     st.markdown(
