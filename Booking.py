@@ -146,6 +146,9 @@ with left:
 # ---------------------------------------------------
 # RIGHT SIDE – TRIP INSIGHTS
 # ---------------------------------------------------
+# ---------------------------------------------------
+# RIGHT SIDE – TRIP INSIGHTS
+# ---------------------------------------------------
 with right:
 
     st.markdown("<div class='section-title'>📊 Trip Insights</div>", unsafe_allow_html=True)
@@ -156,54 +159,8 @@ with right:
         co2_flight = float(r["CO2e RFI2.7 (t)"])
         co2_train = co2_flight * 0.05 if train_possible else None
 
-        # --- METRICS ---
-        st.markdown(f"""
-        <div class='metric-box'>
-            <div class='metric-title'>CO₂ Flight</div>
-            <div class='metric-value'>{co2_flight:.4f} t</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        if train_possible:
-            st.markdown(f"""
-            <div class='metric-box'>
-                <div class='metric-title'>CO₂ Train</div>
-                <div class='metric-value'>{co2_train:.4f} t</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown(f"""
-        <div class='metric-box'>
-            <div class='metric-title'>Distance</div>
-            <div class='metric-value'>{r['km']:.0f} km</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown(f"""
-        <div class='metric-box'>
-            <div class='metric-title'>Flight time</div>
-            <div class='metric-value'>{r['flight_time_h']:.1f} h</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        if train_possible:
-            st.markdown(f"""
-            <div class='metric-box'>
-                <div class='metric-title'>Train time</div>
-                <div class='metric-value'>{r['train_time_h']:.1f} h</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            eff = "Good ✅" if r["train_time_h"] < 10 else "Poor ❌"
-            st.markdown(f"""
-            <div class='metric-box'>
-                <div class='metric-title'>Efficiency</div>
-                <div class='metric-value'>{eff}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
         # ---------------------------------------------------
-        # CO₂ BAR CHART (Flight vs Train)
+        # CO₂ BAR CHART (Flight vs Train) – NOW AT THE TOP
         # ---------------------------------------------------
         if train_possible:
             fig = go.Figure()
@@ -231,6 +188,65 @@ with right:
 
             st.plotly_chart(fig, use_container_width=True)
 
+        # ---------------------------------------------------
+        # METRICS BELOW THE BAR CHART
+        # ---------------------------------------------------
+
+        # CO₂ Flight
+        st.markdown(f"""
+        <div class='metric-box'>
+            <div class='metric-title'>CO₂ Flight</div>
+            <div class='metric-value'>{co2_flight:.4f} t</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # CO₂ Train (only if available)
+        if train_possible:
+            st.markdown(f"""
+            <div class='metric-box'>
+                <div class='metric-title'>CO₂ Train</div>
+                <div class='metric-value'>{co2_train:.4f} t</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # Distance
+        st.markdown(f"""
+        <div class='metric-box'>
+            <div class='metric-title'>Distance</div>
+            <div class='metric-value'>{r['km']:.0f} km</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Flight time
+        st.markdown(f"""
+        <div class='metric-box'>
+            <div class='metric-title'>Flight time</div>
+            <div class='metric-value'>{r['flight_time_h']:.1f} h</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # ---------------------------------------------------
+        # Train time + Efficiency SIDE BY SIDE
+        # ---------------------------------------------------
+        if train_possible:
+            col_t1, col_t2 = st.columns(2)
+
+            with col_t1:
+                st.markdown(f"""
+                <div class='metric-box'>
+                    <div class='metric-title'>Train time</div>
+                    <div class='metric-value'>{r['train_time_h']:.1f} h</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            with col_t2:
+                eff = "Good ✅" if r["train_time_h"] < 10 else "Poor ❌"
+                st.markdown(f"""
+                <div class='metric-box'>
+                    <div class='metric-title'>Efficiency</div>
+                    <div class='metric-value'>{eff}</div>
+                </div>
+                """, unsafe_allow_html=True)
 
 # ---------------------------------------------------
 # BOOKING EMAIL + SCOREBOARD (unverändert)
