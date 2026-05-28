@@ -3,6 +3,9 @@ import pandas as pd
 import plotly.graph_objects as go
 import random
 
+# ---------------------------------------------------
+# PAGE CONFIGURATION
+# ---------------------------------------------------
 st.set_page_config(
     page_title="Booking – Europe & Worldwide",
     layout="wide",
@@ -13,8 +16,9 @@ from components.navbar import navbar
 navbar()
 
 # ---------------------------------------------------
-# STYLE
+# GLOBAL STYLE DEFINITIONS (CSS)
 # ---------------------------------------------------
+# These classes define the visual style of metric boxes, titles, and values
 st.markdown("""
 <style>
 
@@ -55,15 +59,22 @@ st.markdown("""
 
 
 # ---------------------------------------------------
-# DATA LOADING
+# DATA LOADING FUNCTION
 # ---------------------------------------------------
 @st.cache_data
 def load_data():
+    """
+    Loads the travel dataset, parses dates, and computes
+    estimated flight and train travel times.
+    """
     df = pd.read_excel("traveldata-export.xlsx")
     df["date"] = pd.to_datetime(df["date"])
     df["route"] = df["departure_iata"] + " → " + df["arrival_iata"]
 
+    # Estimated flight time: distance / 850 km/h + 0.5h buffer
     df["flight_time_h"] = ((df["km"] / 850) + 0.5).round(1)
+
+    # Estimated train time: distance / 120 km/h
     df["train_time_h"] = (df["km"] / 120).round(1)
 
     return df
@@ -72,10 +83,11 @@ df = load_data()
 
 
 # ---------------------------------------------------
-# HEADER
+# HEADER + CALL TO ACTION
 # ---------------------------------------------------
 st.markdown("<h1>Book your next trip</h1>", unsafe_allow_html=True)
 
+# CTA box encouraging sustainable travel
 st.markdown("""
 <div style='padding:18px; background:#F5F2EB; border-radius:8px;
             font-family: 'Inter', sans-serif; font-size:18px; font-weight:400;
@@ -86,36 +98,42 @@ st.markdown("""
 
 st.markdown("<br>", unsafe_allow_html=True)
 
+
 # ---------------------------------------------------
-# LAYOUT
+# MAIN LAYOUT: LEFT = BOOKING FORM, RIGHT = INSIGHTS
 # ---------------------------------------------------
 left, right = st.columns([1.2, 1], vertical_alignment="top")
 
 with left:
 
+    # Basic traveler information
     name_ma = st.text_input("Traveler name & 4-digit ID", "")
 
+    # Departure and arrival selection
     col_dep, col_arr = st.columns(2)
 
     departure_options = sorted(df["departure_city"].dropna().unique())
     departure_options_with_other = departure_options + ["Other"]
 
+    # Departure city selection
     with col_dep:
         selected_departure = st.selectbox("Departure city", departure_options_with_other)
         if selected_departure == "Other":
             selected_departure = st.text_input("Enter custom departure city")
 
+    # Arrival city options depend on selected departure
     arrival_options = sorted(
         df[df["departure_city"] == selected_departure]["arrival_city"].dropna().unique()
     )
     arrival_options_with_other = arrival_options + ["Other"]
 
+    # Arrival city selection
     with col_arr:
         selected_arrival = st.selectbox("Arrival city", arrival_options_with_other)
         if selected_arrival == "Other":
             selected_arrival = st.text_input("Enter custom arrival city")
 
-    # Trip type + dates
+    # Trip type and dates
     col_trip, col_dates = st.columns(2)
 
     with col_trip:
@@ -125,7 +143,7 @@ with left:
         departure_date = st.date_input("Departure date")
         return_date = st.date_input("Return date") if trip_type == "Round-trip" else None
 
-    # Preferred travel mode – only show Train if available
+    # Determine if a train alternative exists for the selected route
     row = df[
         (df["departure_city"] == selected_departure) &
         (df["arrival_city"] == selected_arrival)
@@ -135,16 +153,19 @@ with left:
     if not row.empty:
         train_possible = bool(row.iloc[0]["train_alternative_available"])
 
+    # Travel mode selection (Train only shown if available)
     travel_modes = ["Flight"]
     if train_possible:
         travel_modes.append("Train")
 
     booking_choice = st.radio("Preferred travel mode", travel_modes)
 
+    # Optional notes
     optional_note = st.text_area("Optional note (special requests, comments)", "")
 
+
 # ---------------------------------------------------
-# RIGHT SIDE – TRIP INSIGHTS
+# RIGHT SIDE – TRIP INSIGHTS PANEL
 # ---------------------------------------------------
 with right:
 
@@ -153,15 +174,17 @@ with right:
     if not row.empty:
         r = row.iloc[0]
 
+        # Extract CO₂ values
         co2_flight = float(r["CO2e RFI2.7 (t)"])
         train_possible = bool(r["train_alternative_available"])
         co2_train = co2_flight * 0.05 if train_possible else None
 
         # ---------------------------------------------------
-        # 1) CO₂ BAR CHART (ALWAYS SHOWN)
+        # 1) CO₂ BAR CHART (always shown)
         # ---------------------------------------------------
         fig = go.Figure()
 
+        # Flight CO₂ bar
         fig.add_trace(go.Bar(
             x=["Flight"],
             y=[co2_flight],
@@ -169,6 +192,7 @@ with right:
             name="Flight CO₂"
         ))
 
+        # Train CO₂ bar only if train exists
         if train_possible:
             fig.add_trace(go.Bar(
                 x=["Train"],
@@ -192,6 +216,7 @@ with right:
         if train_possible:
             col_c1, col_c2, col_c3 = st.columns(3)
 
+            # CO₂ Flight
             with col_c1:
                 st.markdown(f"""
                 <div class='metric-box'>
@@ -200,6 +225,7 @@ with right:
                 </div>
                 """, unsafe_allow_html=True)
 
+            # CO₂ Train
             with col_c2:
                 st.markdown(f"""
                 <div class='metric-box'>
@@ -208,6 +234,7 @@ with right:
                 </div>
                 """, unsafe_allow_html=True)
 
+            # Gamification points (only if train selected)
             with col_c3:
                 if booking_choice == "Train":
                     st.markdown(f"""
@@ -225,7 +252,7 @@ with right:
                     """, unsafe_allow_html=True)
 
         else:
-            # Only Flight CO₂ if no train alternative
+            # Only show CO₂ Flight if no train option exists
             st.markdown(f"""
             <div class='metric-box'>
                 <div class='metric-title'>CO₂ Flight</div>
@@ -240,6 +267,7 @@ with right:
 
             col_t1, col_t2, col_t3 = st.columns(3)
 
+            # Flight time
             with col_t1:
                 st.markdown(f"""
                 <div class='metric-box'>
@@ -248,6 +276,7 @@ with right:
                 </div>
                 """, unsafe_allow_html=True)
 
+            # Train time
             with col_t2:
                 st.markdown(f"""
                 <div class='metric-box'>
@@ -256,6 +285,7 @@ with right:
                 </div>
                 """, unsafe_allow_html=True)
 
+            # Train efficiency rating
             with col_t3:
                 eff = "Good ✅" if r["train_time_h"] < 10 else "Poor ❌"
                 st.markdown(f"""
@@ -266,6 +296,7 @@ with right:
                 """, unsafe_allow_html=True)
 
         else:
+            # Only show flight time if no train option exists
             st.markdown(f"""
             <div class='metric-box'>
                 <div class='metric-title'>Flight time</div>
@@ -279,6 +310,7 @@ with right:
 # ---------------------------------------------------
 secretary_email = "secretariat@company.com"
 
+# Build email body dynamically
 email_body = f"""
 Hi,
 
@@ -297,13 +329,12 @@ if trip_type == "Round-trip":
 
 email_body += "\nThank you."
 
+# When user clicks the booking button
 if st.button("📧 Generate booking email"):
     st.code(email_body)
     st.success(f"Email successfully sent to – {secretary_email}.")
 
-    # ---------------------------------------------------
-    # GAMIFICATION MESSAGE (only if train possible + chosen)
-    # ---------------------------------------------------
+    # Show gamification success message if train chosen
     if train_possible and booking_choice == "Train":
         st.markdown("""
         ### 🌟 Good job!
@@ -311,18 +342,20 @@ if st.button("📧 Generate booking email"):
         """)
 
     # ---------------------------------------------------
-    # SCOREBOARD (always shown after booking)
+    # TEAM SCOREBOARD (shown after booking)
     # ---------------------------------------------------
     scoreboard = pd.DataFrame({
         "Team": ["Sales & Customer Markets", "Operations & Delivery", "Technology & Innovation", "Corporate Services"],
         "Points": [140, 135, 110, 90]
     })
 
+    # Sort teams by points and assign ranking
     scoreboard = scoreboard.sort_values(by="Points", ascending=False).reset_index(drop=True)
     scoreboard.insert(0, "Rank", range(1, len(scoreboard) + 1))
 
     max_pts = scoreboard["Points"].max()
 
+    # Styles for rank badges and progress bars
     rank_styles = {
         1: "background:#FAEEDA;color:#633806",
         2: "background:#F1EFE8;color:#444441",
@@ -335,12 +368,14 @@ if st.button("📧 Generate booking email"):
         4: "#636361",
     }
 
+    # Build HTML table rows
     rows_html = ""
     for _, row in scoreboard.iterrows():
         r = int(row["Rank"])
         badge_style = rank_styles.get(r, "background:#f0f0f0;color:#888888")
         bar_color = bar_colors.get(r, "#C8C6BE")
         bar_pct = int(row["Points"] / max_pts * 100)
+
         rows_html += f"""
         <tr style="border-bottom:0.5px solid #e8e8e8;">
           <td style="padding:12px 16px;vertical-align:middle;width:56px">
@@ -360,6 +395,7 @@ if st.button("📧 Generate booking email"):
           </td>
         </tr>"""
 
+    # Final scoreboard table
     table_html = f"""
     <table style="width:100%;border-collapse:collapse;font-family:sans-serif;
       border:0.5px solid #e0e0e0;border-radius:10px;overflow:hidden">
