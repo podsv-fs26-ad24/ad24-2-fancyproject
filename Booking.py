@@ -160,7 +160,7 @@ with right:
         co2_train = co2_flight * 0.05 if train_possible else None
 
         # ---------------------------------------------------
-        # CO₂ BAR CHART (Flight vs Train) – NOW AT THE TOP
+        # 1) CO₂ BAR CHART (TOP)
         # ---------------------------------------------------
         if train_possible:
             fig = go.Figure()
@@ -189,49 +189,42 @@ with right:
             st.plotly_chart(fig, use_container_width=True)
 
         # ---------------------------------------------------
-        # METRICS BELOW THE BAR CHART
+        # 2) CO₂ Flight | CO₂ Train (SIDE BY SIDE)
         # ---------------------------------------------------
+        col_c1, col_c2 = st.columns(2)
 
-        # CO₂ Flight
-        st.markdown(f"""
-        <div class='metric-box'>
-            <div class='metric-title'>CO₂ Flight</div>
-            <div class='metric-value'>{co2_flight:.4f} t</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # CO₂ Train (only if available)
-        if train_possible:
+        with col_c1:
             st.markdown(f"""
             <div class='metric-box'>
-                <div class='metric-title'>CO₂ Train</div>
-                <div class='metric-value'>{co2_train:.4f} t</div>
+                <div class='metric-title'>CO₂ Flight</div>
+                <div class='metric-value'>{co2_flight:.4f} t</div>
             </div>
             """, unsafe_allow_html=True)
 
-        # Distance
-        st.markdown(f"""
-        <div class='metric-box'>
-            <div class='metric-title'>Distance</div>
-            <div class='metric-value'>{r['km']:.0f} km</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # Flight time
-        st.markdown(f"""
-        <div class='metric-box'>
-            <div class='metric-title'>Flight time</div>
-            <div class='metric-value'>{r['flight_time_h']:.1f} h</div>
-        </div>
-        """, unsafe_allow_html=True)
+        with col_c2:
+            if train_possible:
+                st.markdown(f"""
+                <div class='metric-box'>
+                    <div class='metric-title'>CO₂ Train</div>
+                    <div class='metric-value'>{co2_train:.4f} t</div>
+                </div>
+                """, unsafe_allow_html=True)
 
         # ---------------------------------------------------
-        # Train time + Efficiency SIDE BY SIDE
+        # 3) Flight time | Train time | Train Efficiency
         # ---------------------------------------------------
         if train_possible:
-            col_t1, col_t2 = st.columns(2)
+            col_t1, col_t2, col_t3 = st.columns(3)
 
             with col_t1:
+                st.markdown(f"""
+                <div class='metric-box'>
+                    <div class='metric-title'>Flight time</div>
+                    <div class='metric-value'>{r['flight_time_h']:.1f} h</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            with col_t2:
                 st.markdown(f"""
                 <div class='metric-box'>
                     <div class='metric-title'>Train time</div>
@@ -239,14 +232,23 @@ with right:
                 </div>
                 """, unsafe_allow_html=True)
 
-            with col_t2:
+            with col_t3:
                 eff = "Good ✅" if r["train_time_h"] < 10 else "Poor ❌"
                 st.markdown(f"""
                 <div class='metric-box'>
-                    <div class='metric-title'>Efficiency</div>
+                    <div class='metric-title'>Train Efficiency</div>
                     <div class='metric-value'>{eff}</div>
                 </div>
                 """, unsafe_allow_html=True)
+
+        else:
+            # If no train alternative → only Flight time
+            st.markdown(f"""
+            <div class='metric-box'>
+                <div class='metric-title'>Flight time</div>
+                <div class='metric-value'>{r['flight_time_h']:.1f} h</div>
+            </div>
+            """, unsafe_allow_html=True)
 
 # ---------------------------------------------------
 # BOOKING EMAIL + SCOREBOARD (unverändert)
