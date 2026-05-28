@@ -435,7 +435,7 @@ with col_target:
 
 # ---------------- CO₂ TARGET TRACKING PLOT (GOAL vs. ACTUAL) ----------------
 st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
-with st.container:
+with st.container():
     # last completed year
     last_full_year = sim_year - 1
     
@@ -535,7 +535,7 @@ with st.container:
 
 # ---------------- CO₂ BY COMPLETE YEAR & BUSINESS UNIT ----------------
 st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
-with st.container:
+with st.container():
     # only completed years (before sim_year)
     co2_completed = co2_by_year_bu[co2_by_year_bu["year"] <= last_full_year]
     

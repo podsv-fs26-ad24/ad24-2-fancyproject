@@ -188,7 +188,7 @@ with right:
         fig.add_trace(go.Bar(
             x=["Flight"],
             y=[co2_flight],
-            marker_color="#C65D3A",
+            marker_color="#DCC9B6",
             name="Flight CO₂"
         ))
 
@@ -197,7 +197,7 @@ with right:
             fig.add_trace(go.Bar(
                 x=["Train"],
                 y=[co2_train],
-                marker_color="#7BAF7B",
+                marker_color="#83781B",
                 name="Train CO₂"
             ))
 
