@@ -52,8 +52,8 @@ bu_colors = {
 
 # st.title("Europe – Company Business Travel & CO₂")
 
-title_col, space = st.columns([4, 3])
-info_col, space = st.columns([4, 3])
+title_col, space = st.columns([4, 1])
+info_col, space = st.columns([4, 1])
 
 with title_col:
     st.markdown(
@@ -430,11 +430,12 @@ with col_target:
 # ---------------------------------------------------
 # CO₂ TARGET TRACKING & CO₂ TREND (SIDE BY SIDE)
 # ---------------------------------------------------
-st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
-target_plot, space, trend_plot = st.columns([5, 1, 5])
+# st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
+# target_plot, space, trend_plot = st.columns([5, 1, 5])
 
 # ---------------- CO₂ TARGET TRACKING PLOT (GOAL vs. ACTUAL) ----------------
-with target_plot:
+st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
+with st.container:
     # last completed year
     last_full_year = sim_year - 1
     
@@ -533,7 +534,8 @@ with target_plot:
     st.plotly_chart(fig_track, use_container_width=True)
 
 # ---------------- CO₂ BY COMPLETE YEAR & BUSINESS UNIT ----------------
-with trend_plot:
+st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
+with st.container:
     # only completed years (before sim_year)
     co2_completed = co2_by_year_bu[co2_by_year_bu["year"] <= last_full_year]
     
