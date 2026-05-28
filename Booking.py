@@ -153,13 +153,15 @@ with right:
         r = row.iloc[0]
 
         co2_flight = float(r["CO2e RFI2.7 (t)"])
-        co2_train = co2_flight * 0.05 if train_possible else 0.0   # ALWAYS SHOW TRAIN BAR
+        train_possible = bool(r["train_alternative_available"])
+        co2_train = co2_flight * 0.05 if train_possible else None
 
         # ---------------------------------------------------
         # 1) CO₂ BAR CHART (ALWAYS SHOWN)
         # ---------------------------------------------------
         fig = go.Figure()
 
+        # Flight bar always shown
         fig.add_trace(go.Bar(
             x=["Flight"],
             y=[co2_flight],
@@ -167,12 +169,14 @@ with right:
             name="Flight CO₂"
         ))
 
-        fig.add_trace(go.Bar(
-            x=["Train"],
-            y=[co2_train],
-            marker_color="#7BAF7B",
-            name="Train CO₂"
-        ))
+        # Train bar only if train alternative exists
+        if train_possible:
+            fig.add_trace(go.Bar(
+                x=["Train"],
+                y=[co2_train],
+                marker_color="#7BAF7B",
+                name="Train CO₂"
+            ))
 
         fig.update_layout(
             height=260,
@@ -186,9 +190,27 @@ with right:
         # ---------------------------------------------------
         # 2) CO₂ Flight | CO₂ Train (SIDE BY SIDE)
         # ---------------------------------------------------
-        col_c1, col_c2 = st.columns(2)
+        if train_possible:
+            col_c1, col_c2 = st.columns(2)
 
-        with col_c1:
+            with col_c1:
+                st.markdown(f"""
+                <div class='metric-box'>
+                    <div class='metric-title'>CO₂ Flight</div>
+                    <div class='metric-value'>{co2_flight:.4f} t</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            with col_c2:
+                st.markdown(f"""
+                <div class='metric-box'>
+                    <div class='metric-title'>CO₂ Train</div>
+                    <div class='metric-value'>{co2_train:.4f} t</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        else:
+            # Only Flight CO₂ if no train alternative
             st.markdown(f"""
             <div class='metric-box'>
                 <div class='metric-title'>CO₂ Flight</div>
@@ -196,17 +218,8 @@ with right:
             </div>
             """, unsafe_allow_html=True)
 
-        with col_c2:
-            st.markdown(f"""
-            <div class='metric-box'>
-                <div class='metric-title'>CO₂ Train</div>
-                <div class='metric-value'>{co2_train:.4f} t</div>
-            </div>
-            """, unsafe_allow_html=True)
-
         # ---------------------------------------------------
         # 3) Flight time | Train time | Train Efficiency
-        #    ONLY IF TRAIN ALTERNATIVE EXISTS
         # ---------------------------------------------------
         if train_possible:
 
