@@ -75,6 +75,7 @@ df = load_data()
 # HEADER
 # ---------------------------------------------------
 st.markdown("<h1>Book your next trip</h1>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
 st.markdown("""
 <div style='padding:18px; background:#F5F2EB; border-radius:8px;
