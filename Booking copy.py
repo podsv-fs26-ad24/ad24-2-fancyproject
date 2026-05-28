@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly
+import plotly.graph_objects as go
 import math
 import random
 
@@ -31,7 +32,7 @@ div[data-testid="stMetricValue"] > div {
     color: #111 !important;
 }
 
-/* Planet Impact – Titel */
+/* Planet Impact – Titel (identisch zu Metric-Label) */
 .planet-impact-title {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
@@ -40,7 +41,7 @@ div[data-testid="stMetricValue"] > div {
     letter-spacing: 0.04em;
 }
 
-/* Planet Impact – Text */
+/* Planet Impact – Text (identisch zu Metric-Wert) */
 .planet-impact-text {
     font-family: 'Inter', sans-serif;
     font-size: 20px;
@@ -50,6 +51,7 @@ div[data-testid="stMetricValue"] > div {
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # ---------------------------------------------------
@@ -63,9 +65,11 @@ def load_data():
     df["month"] = df["date"].dt.month
     df["route"] = df["departure_iata"] + " → " + df["arrival_iata"]
 
+    # Flight time estimation (distance / 850 km/h + 0.5h buffer)
     df["flight_time_h"] = (df["km"] / 850) + 0.5
     df["flight_time_h"] = df["flight_time_h"].round(1)
 
+    # Train time estimation (distance / 120 km/h)
     df["train_time_h"] = df["km"] / 120
     df["train_time_h"] = df["train_time_h"].round(1)
 
@@ -73,9 +77,8 @@ def load_data():
 
 df = load_data()
 
-
 # ---------------------------------------------------
-# EUROPE FILTER
+# EUROPE FILTER (always active)
 # ---------------------------------------------------
 @st.cache_data
 def filter_europe(df):
@@ -89,27 +92,73 @@ def filter_europe(df):
 df_active = filter_europe(df)
 filtered = df_active.copy()
 
+# ---------------------------------------------------
+# MAP FUNCTION (SHOW ONLY SELECTED ROUTE)
+# ---------------------------------------------------
+@st.cache_data
+def build_map(selected_departure, selected_arrival, df):
+    fig = go.Figure()
+
+    route_df = df[
+        (df["departure_city"] == selected_departure) &
+        (df["arrival_city"] == selected_arrival)
+    ]
+
+    if route_df.empty:
+        return fig
+
+    r = route_df.iloc[0]
+    if r["train_alternative_available"] == 1:
+        line_color = "#83781B"   # train alternative
+    else:
+        line_color = "#DCC9B6"   # flight
+
+    fig.add_trace(go.Scattergeo(
+        lon=[r["departure_lon"], r["arrival_lon"]],
+        lat=[r["departure_lat"], r["arrival_lat"]],
+        mode="lines+markers",
+        line=dict(width=3, color=line_color),
+        marker=dict(size=6, color="black"),
+        hovertext=(
+            f"{r['route']}<br>"
+            f"CO₂: {r['CO2e RFI2.7 (t)']:.1f} t<br>"
+            f"Distance: {r['km']:.0f} km<br>"
+            f"Flight time: {r['flight_time_h']:.1f} h<br>"
+            f"Train time: {r['train_time_h']:.1f} h<br>"
+            f"Train alternative: {'Yes' if r['train_alternative_available'] else 'No'}"
+        ),
+        hoverinfo="text"
+    ))
+
+    fig.update_layout(
+        height=450,
+        geo=dict(
+            projection_type="natural earth",
+            lonaxis=dict(range=[-15, 35]),
+            lataxis=dict(range=[35, 70]),
+            showland=True,
+            landcolor="#e8f0f8",
+            showocean=True,
+            oceancolor="#b8d4e8",
+            showcountries=True,
+            countrycolor="#c0cfe0",
+        ),
+        margin=dict(l=0, r=0, t=0, b=0),
+        showlegend=False
+    )
+    return fig
 
 # ---------------------------------------------------
-# HEADER
+# HEADER: BOOKING TITLE + ROUTE MAP TITLE SIDE BY SIDE
 # ---------------------------------------------------
-st.markdown("<h1 style='margin-bottom:0;'>Book your next trip</h1>", unsafe_allow_html=True)
-
-
-# ---------------------------------------------------
-# CALL TO ACTION ÜBER BOOKING
-# ---------------------------------------------------
-st.markdown("""
-<div style='padding:18px; background:#F5F2EB; border-radius:8px;
-            font-family:Inter; font-size:16px; font-weight:600;
-            color:#4A3F2A; margin-bottom:1.5rem'>
-    🌍 Choose the greener option – earn points & reduce CO₂
-</div>
-""", unsafe_allow_html=True)
-
+col_title, col_map_title = st.columns([1.2, 1])
+with col_title:
+    st.markdown("<h1 style='margin-bottom:0;'>Book your next trip</h1>", unsafe_allow_html=True)
+with col_map_title:
+    st.markdown("<h1 style='margin-bottom:0;'></h1>", unsafe_allow_html=True)
 
 # ---------------------------------------------------
-# TWO-COLUMN LAYOUT: LEFT = BOOKING, RIGHT = METRICS
+# TWO-COLUMN LAYOUT: LEFT = BOOKING, RIGHT = MAP
 # ---------------------------------------------------
 left, right = st.columns([1.2, 1], vertical_alignment="top")
 
@@ -117,8 +166,10 @@ with left:
 
     name_ma = st.text_input("Traveler name & 4-digit ID", "")
 
+    # --- ROW: Departure (left) + Arrival (right) ---
     col_dep, col_arr = st.columns(2)
 
+    # Departure dropdown + "Other"
     departure_options = sorted(df["departure_city"].dropna().unique())
     departure_options_with_other = departure_options + ["Other"]
 
@@ -127,6 +178,7 @@ with left:
         if selected_departure == "Other":
             selected_departure = st.text_input("Enter custom departure city")
 
+    # Arrival dropdown + "Other"
     arrival_options = sorted(
         df[df["departure_city"] == selected_departure]["arrival_city"].dropna().unique()
     )
@@ -137,6 +189,7 @@ with left:
         if selected_arrival == "Other":
             selected_arrival = st.text_input("Enter custom arrival city")
 
+    # --- ROW: Trip type (left) + Dates (right) ---
     col_trip, col_dates = st.columns(2)
 
     with col_trip:
@@ -144,47 +197,72 @@ with left:
 
     with col_dates:
         departure_date = st.date_input("Departure date")
-        return_date = st.date_input("Return date") if trip_type == "Round-trip" else None
+        return_date = (
+            st.date_input("Return date") if trip_type == "Round-trip" else None
+        )
 
     booking_choice = st.radio("Preferred travel mode", ["Flight", "Train"])
     optional_note = st.text_area("Optional note (special requests, comments)", "")
 
-
-# ---------------------------------------------------
-# RIGHT SIDE: METRICS (statt Karte)
-# ---------------------------------------------------
+# --- MISSING BLOCK (now restored) ---
 with right:
-    row = df[
-        (df["departure_city"] == selected_departure) &
-        (df["arrival_city"] == selected_arrival)
-    ]
+    fig_map = build_map(selected_departure, selected_arrival, df)
+    st.plotly_chart(fig_map, use_container_width=True)
 
-    if not row.empty:
-        r = row.iloc[0]
-        train_possible = bool(r["train_alternative_available"])
+# ---------------------------------------------------
+# FULL-WIDTH TRAVEL TIME COMPARISON
+# ---------------------------------------------------
 
-        st.metric("CO₂ Emissions", f"{r['CO2e RFI2.7 (t)']:.1f} t")
-        st.metric("Distance", f"{r['km']:.0f} km")
-        st.metric("Flight time", f"{r['flight_time_h']:.1f} h")
+st.markdown("<div style='margin-top:-2rem'></div>", unsafe_allow_html=True)
 
-        if train_possible:
-            st.metric("Train time", f"{r['train_time_h']:.1f} h")
+st.subheader("⏱ Travel Time per way")
 
-            eff = "Good ✅" if r["train_time_h"] < 10 else "Poor ❌"
-            st.metric("Efficiency", eff)
+row = df[
+    (df["departure_city"] == selected_departure) &
+    (df["arrival_city"] == selected_arrival)
+]
 
-            if booking_choice == "Train":
-                st.metric("Gamification points", "Earned 🌟")
+if not row.empty:
+    train_possible = bool(row.iloc[0]["train_alternative_available"])
+    train_time_h = row.iloc[0]["train_time_h"]
+    flight_time_h = row.iloc[0]["flight_time_h"]
+
+    def h_to_hm(hours):
+        h = int(hours)
+        m = int((hours - h) * 60)
+        return f"{h}h {m:02d}m"
+
+    train_hm = h_to_hm(train_time_h)
+    flight_hm = h_to_hm(flight_time_h)
+
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    col1.metric("Train alternative", "Yes 🚆" if train_possible else "No ❌")
+    col2.metric("Flight time", flight_hm)
+    col3.metric("Train time", train_hm if train_possible else " --")
+    col4.metric("Efficiency", "Good ✅" if train_time_h < 10 else "Poor ❌")
+    col5.metric("Gamification points", "Yes" if booking_choice == "Train" else "No")
+
+    # col6: Planet impact message
+    with col6:
+        if booking_choice == "Train" and train_possible:
+            impact_messages = [
+                "Like skipping 3 weeks of driving to work 🚗",
+                "Equal to what 1 tree absorbs in a year 🌳",
+                "Same impact as turning off your home for a full day 💡",
+                "As good as avoiding 120 plastic bottles 🧴"
+            ]
+            msg = random.choice(impact_messages)
+        else:
+            msg = "Flying emits much more CO₂"
+
+        st.markdown(f"""
+            <div class='planet-impact-title'>Planet Impact</div>
+            <div class='planet-impact-text'>{msg}</div>
+        """, unsafe_allow_html=True)
 
 
 # ---------------------------------------------------
-# TRIP INSIGHTS (statt Travel Time per way)
-# ---------------------------------------------------
-st.subheader("📊 Trip Insights")
-
-
-# ---------------------------------------------------
-# BOOKING EMAIL + SCOREBOARD
+# FULL-WIDTH BOOKING + SCOREBOARD
 # ---------------------------------------------------
 secretary_email = "secretariat@company.com"
 
@@ -216,16 +294,28 @@ if st.button("📧 Generate booking email"):
         You earned points for your team and made the world a bit greener 🌱
         """)
 
+    # --- Show scoreboard only after booking ---
     scoreboard = pd.DataFrame({
         "Team": ["Sales & Customer Markets", "Operations & Delivery", "Technology & Innovation", "Corporate Services"],
         "Points": [140, 135, 110, 90]
     })
 
+    # Sort by points descending and add rank column
     scoreboard = scoreboard.sort_values(by="Points", ascending=False).reset_index(drop=True)
     scoreboard.insert(0, "Rank", range(1, len(scoreboard) + 1))
 
-    max_pts = scoreboard["Points"].max()
+    # Style: remove index + improve design
+    styled_scoreboard = scoreboard.style.set_table_styles([
+        {"selector": "th", "props": [("background-color", "#f0f4f8"), ("color", "#333"), ("font-weight", "bold"), ("text-align", "center")]},
+        {"selector": "td", "props": [("text-align", "center"), ("padding", "6px 12px")]},
+        {"selector": "tr:nth-child(even)", "props": [("background-color", "#fafafa")]},
+        {"selector": "tr:hover", "props": [("background-color", "#e8f0fe")]}
+    ]).hide(axis="index")
 
+    st.subheader("🏆 Team Scoreboard")
+    
+    max_pts = scoreboard["Points"].max()
+ 
     rank_styles = {
         1: "background:#FAEEDA;color:#633806",
         2: "background:#F1EFE8;color:#444441",
@@ -237,7 +327,7 @@ if st.button("📧 Generate booking email"):
         3: "#D85A30",
         4: "#636361",
     }
-
+ 
     rows_html = ""
     for _, row in scoreboard.iterrows():
         r = int(row["Rank"])
@@ -262,7 +352,7 @@ if st.button("📧 Generate booking email"):
             {int(row['Points'])}
           </td>
         </tr>"""
-
+ 
     table_html = f"""
     <table style="width:100%;border-collapse:collapse;font-family:sans-serif;
       border:0.5px solid #e0e0e0;border-radius:10px;overflow:hidden">
@@ -278,5 +368,5 @@ if st.button("📧 Generate booking email"):
       </thead>
       <tbody>{rows_html}</tbody>
     </table>"""
-
+ 
     st.markdown(table_html, unsafe_allow_html=True)
