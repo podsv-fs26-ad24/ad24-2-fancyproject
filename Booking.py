@@ -78,7 +78,7 @@ st.markdown("<h1>Book your next trip</h1>", unsafe_allow_html=True)
 
 st.markdown("""
 <div style='padding:18px; background:#F5F2EB; border-radius:8px;
-            font-family:Inter; font-size:18px; font-weight:400;
+            font-family: 'Inter', sans-serif; font-size:18px; font-weight:400;
             color:#111111; margin-bottom:1.5rem; letter-spacing:0.01em;'>
     🌍 Choose the greener option – earn points & reduce CO₂
 </div>
