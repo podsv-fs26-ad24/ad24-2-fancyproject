@@ -161,7 +161,6 @@ with right:
         # ---------------------------------------------------
         fig = go.Figure()
 
-        # Flight bar always shown
         fig.add_trace(go.Bar(
             x=["Flight"],
             y=[co2_flight],
@@ -169,7 +168,6 @@ with right:
             name="Flight CO₂"
         ))
 
-        # Train bar only if train alternative exists
         if train_possible:
             fig.add_trace(go.Bar(
                 x=["Train"],
@@ -188,10 +186,10 @@ with right:
         st.plotly_chart(fig, use_container_width=True)
 
         # ---------------------------------------------------
-        # 2) CO₂ Flight | CO₂ Train (SIDE BY SIDE)
+        # 2) CO₂ Flight | CO₂ Train | Gamification Points
         # ---------------------------------------------------
         if train_possible:
-            col_c1, col_c2 = st.columns(2)
+            col_c1, col_c2, col_c3 = st.columns(3)
 
             with col_c1:
                 st.markdown(f"""
@@ -208,6 +206,22 @@ with right:
                     <div class='metric-value'>{co2_train:.4f} t</div>
                 </div>
                 """, unsafe_allow_html=True)
+
+            with col_c3:
+                if booking_choice == "Train":
+                    st.markdown(f"""
+                    <div class='metric-box'>
+                        <div class='metric-title'>Gamification Points</div>
+                        <div class='metric-value'>+50 🌟</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+                    <div class='metric-box'>
+                        <div class='metric-title'>Gamification Points</div>
+                        <div class='metric-value'>–</div>
+                    </div>
+                    """, unsafe_allow_html=True)
 
         else:
             # Only Flight CO₂ if no train alternative
@@ -251,7 +265,6 @@ with right:
                 """, unsafe_allow_html=True)
 
         else:
-            # Only Flight time if no train alternative
             st.markdown(f"""
             <div class='metric-box'>
                 <div class='metric-title'>Flight time</div>
