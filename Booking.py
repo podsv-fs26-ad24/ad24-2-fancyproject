@@ -142,10 +142,6 @@ with left:
 
     optional_note = st.text_area("Optional note (special requests, comments)", "")
 
-
-# ---------------------------------------------------
-# RIGHT SIDE – TRIP INSIGHTS
-# ---------------------------------------------------
 # ---------------------------------------------------
 # RIGHT SIDE – TRIP INSIGHTS
 # ---------------------------------------------------
@@ -157,36 +153,35 @@ with right:
         r = row.iloc[0]
 
         co2_flight = float(r["CO2e RFI2.7 (t)"])
-        co2_train = co2_flight * 0.05 if train_possible else None
+        co2_train = co2_flight * 0.05 if train_possible else 0.0   # ALWAYS SHOW TRAIN BAR
 
         # ---------------------------------------------------
-        # 1) CO₂ BAR CHART (TOP)
+        # 1) CO₂ BAR CHART (ALWAYS SHOWN)
         # ---------------------------------------------------
-        if train_possible:
-            fig = go.Figure()
+        fig = go.Figure()
 
-            fig.add_trace(go.Bar(
-                x=["Flight"],
-                y=[co2_flight],
-                marker_color="#C65D3A",
-                name="Flight CO₂"
-            ))
+        fig.add_trace(go.Bar(
+            x=["Flight"],
+            y=[co2_flight],
+            marker_color="#C65D3A",
+            name="Flight CO₂"
+        ))
 
-            fig.add_trace(go.Bar(
-                x=["Train"],
-                y=[co2_train],
-                marker_color="#7BAF7B",
-                name="Train CO₂"
-            ))
+        fig.add_trace(go.Bar(
+            x=["Train"],
+            y=[co2_train],
+            marker_color="#7BAF7B",
+            name="Train CO₂"
+        ))
 
-            fig.update_layout(
-                height=260,
-                margin=dict(l=0, r=0, t=10, b=0),
-                showlegend=False,
-                yaxis_title="CO₂ (t)"
-            )
+        fig.update_layout(
+            height=260,
+            margin=dict(l=0, r=0, t=10, b=0),
+            showlegend=False,
+            yaxis_title="CO₂ (t)"
+        )
 
-            st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True)
 
         # ---------------------------------------------------
         # 2) CO₂ Flight | CO₂ Train (SIDE BY SIDE)
@@ -202,18 +197,19 @@ with right:
             """, unsafe_allow_html=True)
 
         with col_c2:
-            if train_possible:
-                st.markdown(f"""
-                <div class='metric-box'>
-                    <div class='metric-title'>CO₂ Train</div>
-                    <div class='metric-value'>{co2_train:.4f} t</div>
-                </div>
-                """, unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='metric-box'>
+                <div class='metric-title'>CO₂ Train</div>
+                <div class='metric-value'>{co2_train:.4f} t</div>
+            </div>
+            """, unsafe_allow_html=True)
 
         # ---------------------------------------------------
         # 3) Flight time | Train time | Train Efficiency
+        #    ONLY IF TRAIN ALTERNATIVE EXISTS
         # ---------------------------------------------------
         if train_possible:
+
             col_t1, col_t2, col_t3 = st.columns(3)
 
             with col_t1:
@@ -242,13 +238,14 @@ with right:
                 """, unsafe_allow_html=True)
 
         else:
-            # If no train alternative → only Flight time
+            # Only Flight time if no train alternative
             st.markdown(f"""
             <div class='metric-box'>
                 <div class='metric-title'>Flight time</div>
                 <div class='metric-value'>{r['flight_time_h']:.1f} h</div>
             </div>
             """, unsafe_allow_html=True)
+
 
 # ---------------------------------------------------
 # BOOKING EMAIL + SCOREBOARD (unverändert)
