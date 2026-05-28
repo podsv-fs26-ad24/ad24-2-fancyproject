@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-import plotly
-import math
+import plotly.graph_objects as go
 import random
 
 st.set_page_config(
@@ -9,44 +8,42 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
 from components.navbar import navbar
 navbar()
 
+# ---------------------------------------------------
+# STYLE
+# ---------------------------------------------------
 st.markdown("""
 <style>
-/* Metric-Label (oben) */
-div[data-testid="stMetricLabel"] > div {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #444 !important;
-    letter-spacing: 0.05em;
+.metric-box {
+    background: #F8F6F2;
+    padding: 18px 22px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    border: 1px solid #E4E0D7;
 }
-
-/* Metric-Wert (gross) */
-div[data-testid="stMetricValue"] > div {
-    font-family: 'Inter', sans-serif;
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    color: #111 !important;
-}
-
-/* Planet Impact – Titel */
-.planet-impact-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    color: #444;
+.metric-title {
+    font-family: Inter;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6A6256;
     letter-spacing: 0.04em;
 }
-
-/* Planet Impact – Text */
-.planet-impact-text {
-    font-family: 'Inter', sans-serif;
+.metric-value {
+    font-family: Inter;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1A1816;
+    margin-top: 4px;
+}
+.section-title {
+    font-family: Inter;
     font-size: 20px;
     font-weight: 700;
-    color: #111;
-    line-height: 1.4;
+    margin-bottom: 12px;
+    color: #1A1816;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -59,15 +56,10 @@ div[data-testid="stMetricValue"] > div {
 def load_data():
     df = pd.read_excel("traveldata-export.xlsx")
     df["date"] = pd.to_datetime(df["date"])
-    df["year"] = df["date"].dt.year
-    df["month"] = df["date"].dt.month
     df["route"] = df["departure_iata"] + " → " + df["arrival_iata"]
 
-    df["flight_time_h"] = (df["km"] / 850) + 0.5
-    df["flight_time_h"] = df["flight_time_h"].round(1)
-
-    df["train_time_h"] = df["km"] / 120
-    df["train_time_h"] = df["train_time_h"].round(1)
+    df["flight_time_h"] = ((df["km"] / 850) + 0.5).round(1)
+    df["train_time_h"] = (df["km"] / 120).round(1)
 
     return df
 
@@ -75,30 +67,10 @@ df = load_data()
 
 
 # ---------------------------------------------------
-# EUROPE FILTER
-# ---------------------------------------------------
-@st.cache_data
-def filter_europe(df):
-    return df[
-        (df["departure_lat"].between(35, 70)) &
-        (df["departure_lon"].between(-15, 35)) &
-        (df["arrival_lat"].between(35, 70)) &
-        (df["arrival_lon"].between(-15, 35))
-    ].copy()
-
-df_active = filter_europe(df)
-filtered = df_active.copy()
-
-
-# ---------------------------------------------------
 # HEADER
 # ---------------------------------------------------
-st.markdown("<h1 style='margin-bottom:0;'>Book your next trip</h1>", unsafe_allow_html=True)
+st.markdown("<h1>Book your next trip</h1>", unsafe_allow_html=True)
 
-
-# ---------------------------------------------------
-# CALL TO ACTION ÜBER BOOKING
-# ---------------------------------------------------
 st.markdown("""
 <div style='padding:18px; background:#F5F2EB; border-radius:8px;
             font-family:Inter; font-size:16px; font-weight:600;
@@ -109,7 +81,7 @@ st.markdown("""
 
 
 # ---------------------------------------------------
-# TWO-COLUMN LAYOUT: LEFT = BOOKING, RIGHT = METRICS
+# LAYOUT
 # ---------------------------------------------------
 left, right = st.columns([1.2, 1], vertical_alignment="top")
 
@@ -137,6 +109,7 @@ with left:
         if selected_arrival == "Other":
             selected_arrival = st.text_input("Enter custom arrival city")
 
+    # Trip type + dates
     col_trip, col_dates = st.columns(2)
 
     with col_trip:
@@ -146,45 +119,116 @@ with left:
         departure_date = st.date_input("Departure date")
         return_date = st.date_input("Return date") if trip_type == "Round-trip" else None
 
-    booking_choice = st.radio("Preferred travel mode", ["Flight", "Train"])
-    optional_note = st.text_area("Optional note (special requests, comments)", "")
-
-
-# ---------------------------------------------------
-# RIGHT SIDE: METRICS (statt Karte)
-# ---------------------------------------------------
-with right:
+    # Preferred travel mode – only show Train if available
     row = df[
         (df["departure_city"] == selected_departure) &
         (df["arrival_city"] == selected_arrival)
     ]
 
+    train_possible = False
+    if not row.empty:
+        train_possible = bool(row.iloc[0]["train_alternative_available"])
+
+    travel_modes = ["Flight"]
+    if train_possible:
+        travel_modes.append("Train")
+
+    booking_choice = st.radio("Preferred travel mode", travel_modes)
+
+    optional_note = st.text_area("Optional note (special requests, comments)", "")
+
+
+# ---------------------------------------------------
+# RIGHT SIDE – TRIP INSIGHTS
+# ---------------------------------------------------
+with right:
+
+    st.markdown("<div class='section-title'>📊 Trip Insights</div>", unsafe_allow_html=True)
+
     if not row.empty:
         r = row.iloc[0]
-        train_possible = bool(r["train_alternative_available"])
 
-        st.metric("CO₂ Emissions", f"{r['CO2e RFI2.7 (t)']:.1f} t")
-        st.metric("Distance", f"{r['km']:.0f} km")
-        st.metric("Flight time", f"{r['flight_time_h']:.1f} h")
+        co2_flight = float(r["CO2e RFI2.7 (t)"])
+        co2_train = co2_flight * 0.05 if train_possible else None
+
+        # --- METRICS ---
+        st.markdown(f"""
+        <div class='metric-box'>
+            <div class='metric-title'>CO₂ Flight</div>
+            <div class='metric-value'>{co2_flight:.4f} t</div>
+        </div>
+        """, unsafe_allow_html=True)
 
         if train_possible:
-            st.metric("Train time", f"{r['train_time_h']:.1f} h")
+            st.markdown(f"""
+            <div class='metric-box'>
+                <div class='metric-title'>CO₂ Train</div>
+                <div class='metric-value'>{co2_train:.4f} t</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class='metric-box'>
+            <div class='metric-title'>Distance</div>
+            <div class='metric-value'>{r['km']:.0f} km</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class='metric-box'>
+            <div class='metric-title'>Flight time</div>
+            <div class='metric-value'>{r['flight_time_h']:.1f} h</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        if train_possible:
+            st.markdown(f"""
+            <div class='metric-box'>
+                <div class='metric-title'>Train time</div>
+                <div class='metric-value'>{r['train_time_h']:.1f} h</div>
+            </div>
+            """, unsafe_allow_html=True)
 
             eff = "Good ✅" if r["train_time_h"] < 10 else "Poor ❌"
-            st.metric("Efficiency", eff)
+            st.markdown(f"""
+            <div class='metric-box'>
+                <div class='metric-title'>Efficiency</div>
+                <div class='metric-value'>{eff}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-            if booking_choice == "Train":
-                st.metric("Gamification points", "Earned 🌟")
+        # ---------------------------------------------------
+        # CO₂ BAR CHART (Flight vs Train)
+        # ---------------------------------------------------
+        if train_possible:
+            fig = go.Figure()
+
+            fig.add_trace(go.Bar(
+                x=["Flight"],
+                y=[co2_flight],
+                marker_color="#C65D3A",
+                name="Flight CO₂"
+            ))
+
+            fig.add_trace(go.Bar(
+                x=["Train"],
+                y=[co2_train],
+                marker_color="#7BAF7B",
+                name="Train CO₂"
+            ))
+
+            fig.update_layout(
+                height=260,
+                margin=dict(l=0, r=0, t=10, b=0),
+                showlegend=False,
+                yaxis_title="CO₂ (t)"
+            )
+
+            st.plotly_chart(fig, use_container_width=True)
 
 
 # ---------------------------------------------------
-# TRIP INSIGHTS (statt Travel Time per way)
-# ---------------------------------------------------
-st.subheader("📊 Trip Insights")
-
-
-# ---------------------------------------------------
-# BOOKING EMAIL + SCOREBOARD
+# BOOKING EMAIL + SCOREBOARD (unverändert)
 # ---------------------------------------------------
 secretary_email = "secretariat@company.com"
 
@@ -209,74 +253,3 @@ email_body += "\nThank you."
 if st.button("📧 Generate booking email"):
     st.code(email_body)
     st.success(f"Email successfully sent to – {secretary_email}.")
-
-    if booking_choice == "Train":
-        st.markdown("""
-        ### 🌟 Great job!
-        You earned points for your team and made the world a bit greener 🌱
-        """)
-
-    scoreboard = pd.DataFrame({
-        "Team": ["Sales & Customer Markets", "Operations & Delivery", "Technology & Innovation", "Corporate Services"],
-        "Points": [140, 135, 110, 90]
-    })
-
-    scoreboard = scoreboard.sort_values(by="Points", ascending=False).reset_index(drop=True)
-    scoreboard.insert(0, "Rank", range(1, len(scoreboard) + 1))
-
-    max_pts = scoreboard["Points"].max()
-
-    rank_styles = {
-        1: "background:#FAEEDA;color:#633806",
-        2: "background:#F1EFE8;color:#444441",
-        3: "background:#FAECE7;color:#712B13",
-    }
-    bar_colors = {
-        1: "#F09920",
-        2: "#9DD8D1",
-        3: "#D85A30",
-        4: "#636361",
-    }
-
-    rows_html = ""
-    for _, row in scoreboard.iterrows():
-        r = int(row["Rank"])
-        badge_style = rank_styles.get(r, "background:#f0f0f0;color:#888888")
-        bar_color = bar_colors.get(r, "#C8C6BE")
-        bar_pct = int(row["Points"] / max_pts * 100)
-        rows_html += f"""
-        <tr style="border-bottom:0.5px solid #e8e8e8;">
-          <td style="padding:12px 16px;vertical-align:middle;width:56px">
-            <span style="display:inline-flex;align-items:center;justify-content:center;
-              width:28px;height:28px;border-radius:50%;font-size:13px;font-weight:600;
-              {badge_style}">{r}</span>
-          </td>
-          <td style="padding:12px 16px;vertical-align:middle">
-            <div style="font-weight:600;font-size:14px;color:#1a1a1a;margin-bottom:5px">{row['Team']}</div>
-            <div style="background:#eeeeee;border-radius:3px;height:5px;width:100%">
-              <div style="width:{bar_pct}%;height:5px;background:{bar_color};border-radius:3px"></div>
-            </div>
-          </td>
-          <td style="padding:12px 16px;text-align:right;font-weight:600;font-size:16px;
-            color:#1a1a1a;vertical-align:middle;width:80px">
-            {int(row['Points'])}
-          </td>
-        </tr>"""
-
-    table_html = f"""
-    <table style="width:100%;border-collapse:collapse;font-family:sans-serif;
-      border:0.5px solid #e0e0e0;border-radius:10px;overflow:hidden">
-      <thead>
-        <tr style="background:#f7f7f7;border-bottom:1px solid #e0e0e0">
-          <th style="padding:10px 16px;text-align:left;font-size:11px;color:#999999;
-            font-weight:600;letter-spacing:0.06em;width:56px">RANK</th>
-          <th style="padding:10px 16px;text-align:left;font-size:11px;color:#999999;
-            font-weight:600;letter-spacing:0.06em">TEAM</th>
-          <th style="padding:10px 16px;text-align:right;font-size:11px;color:#999999;
-            font-weight:600;letter-spacing:0.06em;width:80px">POINTS</th>
-        </tr>
-      </thead>
-      <tbody>{rows_html}</tbody>
-    </table>"""
-
-    st.markdown(table_html, unsafe_allow_html=True)
