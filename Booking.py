@@ -17,34 +17,39 @@ navbar()
 # ---------------------------------------------------
 st.markdown("""
 <style>
+
 .metric-box {
-    background: #F8F6F2;
-    padding: 18px 22px;
-    border-radius: 10px;
-    margin-bottom: 14px;
-    border: 1px solid #E4E0D7;
+    background: #FFFFFF;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #E6E6E6;
 }
+
 .metric-title {
-    font-family: Inter;
-    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
     font-weight: 600;
-    color: #6A6256;
-    letter-spacing: 0.04em;
+    color: #444444;
+    letter-spacing: 0.02em;
 }
+
 .metric-value {
-    font-family: Inter;
-    font-size: 26px;
-    font-weight: 700;
-    color: #1A1816;
-    margin-top: 4px;
-}
-.section-title {
-    font-family: Inter;
+    font-family: 'Inter', sans-serif;
     font-size: 20px;
     font-weight: 700;
-    margin-bottom: 12px;
-    color: #1A1816;
+    color: #111111;
+    margin-top: 2px;
 }
+
+.section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111111;
+    margin-bottom: 12px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
