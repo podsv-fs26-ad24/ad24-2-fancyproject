@@ -71,8 +71,8 @@ with info_col:
             This page provides you an overview of Mellontes European business travel patterns 
             and shows how travel behaviour impacts CO₂ emissions across all Business Units. 
             It helps to understand where we travel most, how our emissions are distributed 
-            and how we war progressing toward Aurevia's annual -5% CO₂ reduction target.
-            The KPIs summarise total travels, total emissions, the most frequent route, 
+            and how we war progressing toward Mellontes annual -5% CO₂ reduction target.
+            The KPIs summarise total travels, total emissions, the most frequent route 
             and whether a train alternative exists within the selected filters.
         </div>
         """,
@@ -313,7 +313,8 @@ with col_left:
         st.info("No data available for selected filters.")
 
 with col_right:
-    st.subheader("Top-Routes in Europe")
+    st.subheader("Top 10 CO₂‑intensive Business Travel Routes in Europe")
+     
 
     if not filtered.empty:
         filtered["route_canonical"] = filtered.apply(
@@ -345,6 +346,8 @@ with col_right:
             "km": "Ø‑Kilometer"
         })
 
+        # round values
+        top_routes["CO₂‑Sum [t]"] = top_routes["CO₂‑Sum [t]"].round(2)
         top_routes["Ø‑Kilometer"] = top_routes["Ø‑Kilometer"].round(0)
 
         # set index to 1-10
