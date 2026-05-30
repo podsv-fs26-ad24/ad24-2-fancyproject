@@ -38,7 +38,7 @@ df_eu = df[
     (df["arrival_lon"].between(-15, 35))
 ].copy()
 
-# mapping
+# apply bu renaming
 df["business_unit"] = df["business_unit"].replace(bu_rename)
 df_eu["business_unit"] = df_eu["business_unit"].replace(bu_rename)
 
@@ -50,7 +50,6 @@ bu_colors = {
     "Corporate Services": "#009B72"
 }
 
-# st.title("Europe – Company Business Travel & CO₂")
 
 title_col, space = st.columns([4, 1])
 info_col, space = st.columns([6, 1])
@@ -89,6 +88,7 @@ filter_col, space1, kpi_col, space2, map_col = st.columns([3,1,2,1,6])
 with filter_col:
     st.subheader("Travel Filter")
 
+    # different filters in this block, year, bu, departure and arrival city
     years = ["All"] + sorted(df_eu["year"].unique())
     selected_year = st.selectbox("Year (starting 2017)", years)
 
@@ -110,6 +110,7 @@ with filter_col:
     selected_arrival = st.selectbox("Arrival city", ["All"] + list(arrival_options))
 
 # ---------------- FILTER LOGIC ----------------
+# boolean maks based on selected filters
 mask = pd.Series(True, index=df_eu.index)
 
 if selected_year != "All":
@@ -148,7 +149,7 @@ with kpi_col:
     else:
         top_route = "–"
 
-    # Städte für Top-Route bestimmen, ab hier neuer code
+    # convert iata route to city names
     if top_route != "–":
         dep_iata, arr_iata = top_route.split(" ⟷ ")
 
@@ -159,6 +160,7 @@ with kpi_col:
     else:
         top_route_cities = ""
 
+    # train alternative
     if top_route != "–":
         df_top = df_kpi[df_kpi["route"] == top_route]
         train_alt_label = "YES" if df_top["train_alternative_available"].sum() > 0 else "NO"
@@ -169,7 +171,7 @@ with kpi_col:
     st.metric("Number of Travels", total_trips)
     st.metric("Total CO₂", f"{total_co2:.1f} t")
 
-    # Top-Route with city names
+    # top-route with city names
     st.markdown(
         f"""
         <div style="font-size:14px; font-weight:500; margin-bottom:2px;">
@@ -193,6 +195,7 @@ with map_col:
     st.subheader("Company Travel Routes in Europe")
 
     if not filtered.empty:
+        # aggregate route-level metrics
         routes = (
             filtered.groupby(
                 ["departure_lat", "departure_lon",
@@ -230,6 +233,7 @@ with map_col:
                 name=r["route"],
             ))
 
+        # map layout settings
         fig.update_layout(
             height=550,
             geo=dict(
@@ -262,6 +266,7 @@ with col_left:
     st.subheader("CO₂ Emissions by Business Unit")
 
     if not filtered.empty:
+        # aggregate co2 per bu
         bu = (
             filtered.groupby("business_unit")["CO2e RFI2.7 (t)"]
             .sum()
@@ -276,7 +281,7 @@ with col_left:
             color_discrete_map=bu_colors
         )
 
-        # Zeilenumbruch NUR nach "&"
+        # line break after &
         tick_labels = [
             label.replace("&", "&<br>") 
             for label in bu["business_unit"]
@@ -290,10 +295,9 @@ with col_left:
             color_discrete_map=bu_colors
         )
 
-        # Legende ausblenden
+        # no legend display
         fig_bu.update_layout(showlegend=False)
 
-        # X‑Achsenlabels setzen
         fig_bu.update_xaxes(
             tickmode="array",
             tickvals=bu["business_unit"],
@@ -333,6 +337,7 @@ with col_right:
             .reset_index()
         )
 
+        # top 10 routes by co2
         top_routes = top_routes.rename(columns={
             "route_canonical": "Route",
             "cities_canonical": "Cities",
@@ -369,7 +374,7 @@ with col_target:
 
     df_trend = df_eu[df_eu["year"] <= 2025]
 
-    # CO₂ pro Jahr und Business Unit
+    # aggregate co2 per year and bu
     co2_by_year_bu = (
         df_trend.groupby(["year", "business_unit"])["CO2e RFI2.7 (t)"]
         .sum()
@@ -380,7 +385,7 @@ with col_target:
 
     for bu in co2_by_year_bu["business_unit"].unique():
 
-        # Vorjahreswert bestimmen
+        # determine previous years co2
         prev_year = sim_year - 1
         prev_data = co2_by_year_bu[
             (co2_by_year_bu["business_unit"] == bu) &
@@ -392,13 +397,11 @@ with col_target:
 
         prev_value = prev_data["co2"].iloc[0]
 
-        # Ziel für das aktuelle Jahr: -5% vom Vorjahr
+        # target: -5% of last year
         target_full_year = prev_value * 0.95
 
-        # Ziel bis zum simulierten Datum
         target_partial = target_full_year * progress
 
-        # Ist-Wert bis zum simulierten Datum
         df_current = df_trend[
             (df_trend["business_unit"] == bu) &
             (df_trend["date"].dt.year == sim_year) &
@@ -407,7 +410,7 @@ with col_target:
 
         actual_partial = df_current["CO2e RFI2.7 (t)"].sum()
 
-        # Status bestimmen
+        # determine status indicator
         if actual_partial <= target_partial:
             status = "🟢 On Track"
         elif actual_partial <= target_partial * 1.10:
@@ -428,18 +431,14 @@ with col_target:
     st.dataframe(tracking_df)
 
 # ---------------------------------------------------
-# CO₂ TARGET TRACKING & CO₂ TREND (SIDE BY SIDE)
+# CO₂ TARGET TRACKING PLOT (GOAL vs. ACTUAL)
 # ---------------------------------------------------
-# st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
-# target_plot, space, trend_plot = st.columns([5, 1, 5])
-
-# ---------------- CO₂ TARGET TRACKING PLOT (GOAL vs. ACTUAL) ----------------
 st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
 with st.container():
     # last completed year
     last_full_year = sim_year - 1
     
-    # Jahrfraktion für Simulationsdatum
+    # convert simulation date to fractional year
     sim_day_of_year = sim_date.timetuple().tm_yday
     days_in_year = 366 if sim_year % 4 == 0 else 365
     year_frac = sim_year + (sim_day_of_year - 1) / days_in_year
@@ -459,7 +458,7 @@ with st.container():
     for bu in all_bus:
         color = bu_colors.get(bu, "#888888")
     
-        # Vorjahreswert (letztes vollendetes Jahr)
+        # co2 from previous year
         prev_data = co2_by_year_bu[
             (co2_by_year_bu["business_unit"] == bu) &
             (co2_by_year_bu["year"] == last_full_year)
@@ -471,8 +470,7 @@ with st.container():
         prev_value = prev_data["co2"].iloc[0]
         target_full_year = prev_value * 0.95
     
-        # --- Ziel-Linie: 95% des Vorjahres, gestrichelt, über das gesamte laufende Jahr ---
-        # Linie geht von 01.01. (Jahresbeginn = 0 kumuliert) bis 31.12. (= target_full_year kumuliert)
+        # add dashed target line
         fig_track.add_trace(go.Scatter(
             x=[sim_year, sim_year + 1],
             y=[0, target_full_year],
@@ -483,24 +481,22 @@ with st.container():
             showlegend=True,
         ))
     
-        # --- Actual-Linie: kumulierter CO₂-Verbrauch im laufenden Jahr bis Simulation Date ---
+        # actual cumulative co2 for current year
         df_current_year = df_trend[
             (df_trend["business_unit"] == bu) &
             (df_trend["date"].dt.year == sim_year)
         ].copy()
     
         if not df_current_year.empty:
-            # Kumulativer Verbrauch pro Tag, gefiltert bis sim_date
             df_current_year = df_current_year[df_current_year["date"] <= pd.to_datetime(sim_date)]
             df_current_year = df_current_year.sort_values("date")
             df_current_year["cumulative_co2"] = df_current_year["CO2e RFI2.7 (t)"].cumsum()
     
-            # x-Achse als Jahresfraktion (z.B. 2025.0 bis 2025.49)
             df_current_year["year_frac"] = df_current_year["date"].apply(
                 lambda d: d.year + (d.timetuple().tm_yday - 1) / (366 if d.year % 4 == 0 else 365)
             )
     
-            # Startpunkt bei 0 hinzufügen
+            # add actual line
             x_vals = [sim_year] + df_current_year["year_frac"].tolist()
             y_vals = [0] + df_current_year["cumulative_co2"].tolist()
     
@@ -515,7 +511,6 @@ with st.container():
             ))
     
     fig_track.update_layout(
-        # title=f"CO₂ Target vs. Actual {sim_year} by Business Unit (–5% vs {last_full_year})",
         xaxis=dict(
             title="Date",
             tickformat=".2f",
@@ -533,7 +528,9 @@ with st.container():
     st.subheader(f"CO₂ Target vs. Actual {sim_year} by Business Unit (–5% vs {last_full_year})")
     st.plotly_chart(fig_track, use_container_width=True)
 
-# ---------------- CO₂ BY COMPLETE YEAR & BUSINESS UNIT ----------------
+# ---------------------------------------------------
+# CO₂ BY COMPLETE YEAR & BUSINESS UNIT
+# ---------------------------------------------------
 st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
 with st.container():
     # only completed years (before sim_year)
@@ -545,7 +542,6 @@ with st.container():
         y="co2",
         color="business_unit",
         markers=True,
-        # title=f"CO₂‑Trend by Business Units (up to {last_full_year})",
         color_discrete_map=bu_colors
     )
     

@@ -9,6 +9,7 @@ To address these challenges, the project introduces a multi‑page intranet dash
 ## Project Objectives and Success Criteria
 The primary objective is to provide employees with a unified, intuitive platform for booking business trips and understanding company‑wide travel behavior. The dashboard should highlight frequently used routes, CO₂‑intensive travel patterns, and opportunities to shift from air to rail where feasible. It also supports Mellontes sustainability strategy by making CO₂ emissions visible at the business‑unit level and by motivating employees through gamification elements.
 Success will be measured by the following criteria:
+
 - Employees can complete a travel booking in under two minutes.
 - The most frequently used routes and top CO₂‑intensive routes are identifiable within 10 seconds.
 - Business units can clearly track their progress toward the –5% annual CO₂‑reduction target.
@@ -50,7 +51,8 @@ Robert has been with the company for over 20 years and works in Sales & Customer
 ### Sara, 28 years
 ::: {.grid}
 ::: {.g-col-8}
-Sara works in Operations & Delivery, where she coordinates cross‑functional projects and ensures smooth execution of operational processes. Her familiarity with CO₂ data comes from a combination of professional exposure — Operations & Delivery regularly evaluates efficiency, resource usage, and travel patterns — and personal interest in sustainability. She has high data literacy, uses her laptop frequently in mobile settings, and engages with internal tools regularly to prepare discussions, identify improvement opportunities, and support more sustainable decision‑making.
+Sara works in Operations & Delivery, where she coordinates cross‑functional projects and ensures that processes run smoothly. Her role involves reviewing operational metrics, including travel patterns, to identify inefficiencies and support better planning.
+She is comfortable working with data, uses internal tools regularly, and values clear, evidence‑based insights that help her prepare discussions and make informed decisions. She travels less frequently than Robert, but she appreciates transparency around travel behaviour because it helps her spot improvement opportunities and support more efficient ways of working.
 :::
 
 ::: {.g-col-4}
@@ -58,14 +60,15 @@ Sara works in Operations & Delivery, where she coordinates cross‑functional pr
 :::
 :::
 
-**User tasks:** Sara aims to identify emission hotspots, compare business‑unit performance, and communicate insights effectively.  
-**Pains:** She struggles with the lack of transparency in current travel data and finds it difficult to communicate complex information to skeptical colleagues.  
-**Gains:** She values clear, visually compelling representations that support her advocacy for more sustainable travel.
+**User tasks:** Sara aims to identify inefficiencies, compare BU performance and prepare discussions.    
+**Pains:** She struggles with the lack of transparency in current travel data and finds it difficult to communicate insights.  
+**Gains:** She values clear, actionable visualizations that support efficient decision‑making.
 
 ## Situation Assessment
 The project is supported by a comprehensive dataset containing travel routes, CO₂ emissions, distances, business‑unit assignments, transport modes, and geographic coordinates. These data enable both spatial and environmental analysis of business travel patterns.
 
 The dashboard consists of five pages:
+
 - A Booking page for planning trips and comparing flight and rail options.
 - A Europe analytics page showing frequently flown routes, CO₂ hotspots, and BU performance.
 - A Worldwide analytics page with global travel patterns.
@@ -78,11 +81,13 @@ Technical implementation relies on Python and Streamlit for data processing and 
 Translate the project objectives into a concrete visualization concept. This corresponds to the value map side of the Value Proposition Canvas [@Osterwalder2014] – describe how the proposed visualization product addresses the users' tasks, relieves their pains and creates gains. Address the following aspects:
 
 * **Product form**: The product consists of five interactive pages:
-(1) a booking interface for planning business trips and comparing flight and train options,
-(2) a European analytics page showing frequently used routes, CO₂ hotspots, and business‑unit performance,
-(3) a global analytics page with the same logic applied worldwide,
-(4) a quiz page that engages employees through character outcomes, and
-(5) a feedback page for collecting suggestions and improvement ideas.
+
+    - A booking interface for planning business trips and comparing flight and train options
+    - A European analytics page showing frequently used routes, CO₂ hotspots, and business‑unit performance
+    - A global analytics page with the same logic applied worldwide
+    - A quiz page that engages employees through character outcomes
+    - A feedback page for collecting suggestions and improvement ideas
+
 * **Visual encodings**: Line color represents the travel mode.
 * **Interactivity**: Filters by time period, business unit, departure and arrival city. Tooltips provide contextural information such as CO₂ emissions, distance and availability of train alternatives. Maps support zooming and panning for both global and regional exploration. The booking page dynamically updates travel time, CO₂ impact, and gamification points based on user input.
 * **Narrative and annotation**: The journey through the dashboard starts with a booking page for employees. Here, users like Robert and Sara can compare flight and train options for a specific trip, see travel time and, where available, train alternatives. This page focuses on individual decisions and makes the consequences of a single booking transparent in a neutral, non‑moralising way. From there, the Europe – Company Business Travel & CO₂ page provides a broader, company‑wide perspective.
@@ -93,7 +98,7 @@ Employees can filter by year, Business Unit and destination to explore how Mello
 
 * **Cognitive and analytical value**: The design makes it easy for users to immediately recognize travel patterns, emission hotspots, and viable alternatives. By encoding CO₂ intensity through color and route frequency through line thickness, the visualization supports fast pattern detection and helps users understand relationships between distance, emissions, and travel behavior. This directly addresses the project goal of enabling employees to grasp how and where the company travels, while giving the sustainability team a clear analytical foundation for identifying high‑impact routes.
 * **Communicative value**: The dashboard is designed to be clear, neutral and accessible for all employee groups.
-Users like Robert receive straightforward, factual insights without moral pressure, while users like Sara can dive deeper into patterns, BU‑level emissions and target tracking. By combining simplicity with analytical depth, the dashboard supports informed conversations about travel behaviour, efficiency and sustainability — without overwhelming or lecturing employees.
+Users like Robert receive straightforward, factual insights without moral pressure, while users like Sara can dive deeper into patterns, BU‑level emissions and target tracking. By combining simplicity with analytical depth, the dashboard supports informed conversations about travel behaviour, efficiency and sustainability, without overwhelming or lecturing employees.
 * **Experiential and aesthetic value**: The modern, interactive design, from the intuitive booking page to the European route map, encourages exploration and builds trust. Interactive elements such as zooming, filtering and switching between views make the experience engaging and help employees connect personal travel decisions with the broader company context. This positive user experience is especially important for employees who may be skeptical of sustainability topics, as it fosters openness, curiosity and reflection rather than resistance.
 
 

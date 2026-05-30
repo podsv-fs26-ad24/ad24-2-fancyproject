@@ -22,7 +22,7 @@ df = load_data()
 # ---------------------------------------------------
 # BUSINESS UNIT RENAME + COLORS
 # ---------------------------------------------------
-# Mapping old BU → new BU
+# mapping old bu → new bu names
 bu_rename = {
     "BU1": "Sales & Customer Markets",
     "BU3": "Operations & Delivery",
@@ -30,7 +30,7 @@ bu_rename = {
     "BU4": "Corporate Services"
 }
 
-# Create EU mask to filter out EU in WW
+# create EU mask to filter out EU in WW
 mask_eu = (
     df["departure_lat"].between(35, 70) &
     df["departure_lon"].between(-15, 35) &
@@ -40,11 +40,11 @@ mask_eu = (
 
 df_ww = df[~mask_eu].copy() # ww = exclude eu
 
-# Use mapping
+# apply bu renaming 
 df["business_unit"] = df["business_unit"].replace(bu_rename)
 df_ww["business_unit"] = df_ww["business_unit"].replace(bu_rename)
 
-# Set colours
+# corporate colors
 bu_colors = {
     "Sales & Customer Markets": "#65524D",
     "Operations & Delivery": "#817E9F",
@@ -52,7 +52,6 @@ bu_colors = {
     "Corporate Services": "#009B72"
 }
 
-# st.title("Worldwide – Company Business Travel & CO₂")
 
 title_col, space = st.columns([4, 1])
 info_col, space = st.columns([6, 1])
@@ -91,6 +90,7 @@ filter_col, space1, kpi_col, space2, map_col = st.columns([3,1,2,1,6])
 with filter_col:
     st.subheader("Travel Filter")
 
+    # different filters in this block, year, bu, departure and arrival city
     years = ["All"] + sorted(df_ww["year"].unique())
     selected_year = st.selectbox("Year (starting 2017)", years)
 
@@ -112,6 +112,7 @@ with filter_col:
     selected_arrival = st.selectbox("Arrival city", ["All"] + list(arrival_options))
 
 # ---------------- FILTER LOGIC ----------------
+# boolean maks based on selected filters
 mask = pd.Series(True, index=df_ww.index)
 
 if selected_year != "All":
@@ -150,7 +151,7 @@ with kpi_col:
     else:
         top_route = "–"
 
-    # Define Top-Route cities
+    # convert iata route to city names
     if top_route != "–":
         dep_iata, arr_iata = top_route.split(" ⟷ ")
 
@@ -161,17 +162,18 @@ with kpi_col:
     else:
         top_route_cities = ""
 
+    # train alternative
     if top_route != "–":
         df_top = df_kpi[df_kpi["route"] == top_route]
         train_alt_label = "YES" if df_top["train_alternative_available"].sum() > 0 else "NO"
     else:
         train_alt_label = "NO"
 
-    # KPIs untereinander
+    # KPIs under each other
     st.metric("Number of Travels", total_trips)
     st.metric("Total CO₂", f"{total_co2:.1f} t")
 
-    # Top-Route mit ausgeschriebenen Städten
+    # top-route with city names
     st.markdown(
         f"""
         <div style="font-size:14px; font-weight:500; margin-bottom:2px;">
@@ -196,6 +198,7 @@ with map_col:
     st.subheader("Company Travel Routes Worldwide")
 
     if not filtered.empty:
+        # aggregate route-level metrics
         routes = (
             filtered.groupby(
                 ["departure_lat", "departure_lon",
@@ -233,12 +236,11 @@ with map_col:
                 name=r["route"],
             ))
 
+        # map layout settings
         fig.update_layout(
             height=550,
             geo=dict(
                 projection_type="orthographic",
-                # lonaxis=dict(range=[-15, 35]),
-                # lataxis=dict(range=[35, 70]),
                 showland=True,
                 landcolor="#e8f0f8",
                 showocean=True,
@@ -263,6 +265,7 @@ with col_left:
     st.subheader("CO₂ Emissions by Business Unit")
 
     if not filtered.empty:
+        # aggregate co2 per bu
         bu = (
             filtered.groupby("business_unit")["CO2e RFI2.7 (t)"]
             .sum()
@@ -277,7 +280,7 @@ with col_left:
             color_discrete_map=bu_colors
         )
 
-        # Change rows ONLY after "&"
+        # line break after &
         tick_labels = [
             label.replace("&", "&<br>") 
             for label in bu["business_unit"]
@@ -291,10 +294,9 @@ with col_left:
             color_discrete_map=bu_colors
         )
 
-        # Do not show legend
+        # no legend display
         fig_bu.update_layout(showlegend=False)
 
-        # Set X‑axislabels
         fig_bu.update_xaxes(
             tickmode="array",
             tickvals=bu["business_unit"],
@@ -334,6 +336,7 @@ with col_right:
             .reset_index()
         )
 
+        # top 10 routes by co2
         top_routes = top_routes.rename(columns={
             "route_canonical": "Route",
             "cities_canonical": "Cities",
@@ -370,7 +373,7 @@ with col_target:
 
     df_trend = df[df["year"] <= 2025]
 
-    # CO₂ per year and business unit
+    # aggregate co2 per year and bu
     co2_by_year_bu = (
         df_trend.groupby(["year", "business_unit"])["CO2e RFI2.7 (t)"]
         .sum()
@@ -381,7 +384,7 @@ with col_target:
 
     for bu in co2_by_year_bu["business_unit"].unique():
 
-        # Calculate value of full year
+        # determine previous years co2
         prev_year = sim_year - 1
         prev_data = co2_by_year_bu[
             (co2_by_year_bu["business_unit"] == bu) &
@@ -393,7 +396,7 @@ with col_target:
 
         prev_value = prev_data["co2"].iloc[0]
 
-        # Current year goal: -5% of previous year
+        # target: -5% of last year
         target_full_year = prev_value * 0.95
 
         # Goal until simulated date
@@ -429,12 +432,8 @@ with col_target:
     st.dataframe(tracking_df)
 
 # ---------------------------------------------------
-# CO₂ TARGET TRACKING & CO₂ TREND (SIDE BY SIDE)
+# CO₂ TARGET TRACKING PLOT (GOAL vs. ACTUAL)
 # ---------------------------------------------------
-# st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
-# target_plot, space, trend_plot = st.columns([5, 1, 5])
-
-# ---------------- CO₂ TARGET TRACKING PLOT (GOAL vs. ACTUAL) ----------------
 st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
 with st.container():
     # last completed year
@@ -472,8 +471,7 @@ with st.container():
         prev_value = prev_data["co2"].iloc[0]
         target_full_year = prev_value * 0.95
     
-        # --- Goal-Line: 95% of previous year, dashed, over complete year ---
-        # Line from 01.01. (beginning of year = 0 ) until 31.12. (= target_full_year )
+        # add dashed target line
         fig_track.add_trace(go.Scatter(
             x=[sim_year, sim_year + 1],
             y=[0, target_full_year],
@@ -484,7 +482,7 @@ with st.container():
             showlegend=True,
         ))
     
-        # --- Actual-Line: summed CO₂-cunsumption in the year until simulation date ---
+        # actual cumulative co2 for current year
         df_current_year = df_trend[
             (df_trend["business_unit"] == bu) &
             (df_trend["date"].dt.year == sim_year)
@@ -501,7 +499,7 @@ with st.container():
                 lambda d: d.year + (d.timetuple().tm_yday - 1) / (366 if d.year % 4 == 0 else 365)
             )
     
-            # Add point of beginning at 0
+            # add actual line
             x_vals = [sim_year] + df_current_year["year_frac"].tolist()
             y_vals = [0] + df_current_year["cumulative_co2"].tolist()
     
@@ -516,7 +514,6 @@ with st.container():
             ))
     
     fig_track.update_layout(
-        # title=f"CO₂ Target vs. Actual {sim_year} by Business Unit (–5% vs {last_full_year})",
         xaxis=dict(
             title="Date",
             tickformat=".2f",
@@ -534,7 +531,9 @@ with st.container():
     st.subheader(f"CO₂ Target vs. Actual {sim_year} by Business Unit (–5% vs {last_full_year})")
     st.plotly_chart(fig_track, use_container_width=True)
 
-# ---------------- CO₂ BY COMPLETE YEAR & BUSINESS UNIT ----------------
+# ---------------------------------------------------
+# CO₂ BY COMPLETE YEAR & BUSINESS UNIT
+# ---------------------------------------------------
 st.markdown("<br>", unsafe_allow_html=True)  # space to upper table
 with st.container():
     # only completed years (before sim_year)
@@ -546,7 +545,6 @@ with st.container():
         y="co2",
         color="business_unit",
         markers=True,
-        # title=f"CO₂‑Trend by Business Units (up to {last_full_year})",
         color_discrete_map=bu_colors
     )
     
@@ -561,6 +559,3 @@ with st.container():
     st.subheader(f"CO₂‑Trend by Business Units (up to {last_full_year})")
     st.plotly_chart(fig_co2_trend_bu, use_container_width=True, key="trendplot_units")
 
-
-# ############
-# # to start streamlit enter in terminal: streamlit run Europa.py
