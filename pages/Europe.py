@@ -22,7 +22,7 @@ df = load_data()
 # ---------------------------------------------------
 # BUSINESS UNIT RENAME + COLORS
 # ---------------------------------------------------
-# mapping old BU → new BU names
+# mapping old bu → new bu names
 bu_rename = {
     "BU1": "Sales & Customer Markets",
     "BU3": "Operations & Delivery",
