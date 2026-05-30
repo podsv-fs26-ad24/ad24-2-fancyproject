@@ -2,16 +2,18 @@
 The project is based on a single raw dataset downloaded from the link provided on moodle (´https://moodle.zhaw.ch/pluginfile.php/2585021/mod_page/content/2/traveldata-export.xlsx´). It contains detailed corporate travel records from the year 2017 to the beginning of 2026. The dataset includes multimodal travel information (flights, trains, buses, rental cars) and associated emissions, costs, and metadata.
 
 ## Raw data
-### Overview Raw Datasets
+The dataset was used in its original exported form because it already matched the required formatting for dashboard implementation and exhibited no quality issues that required preprocessing.
+
+### Overview Datasets
 
 : Overview of raw datasets used in the project. {#tbl-raw-overview}
 
-| Name                   | Quelle   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                            | Storage location                                                                                              |
+| Name                   | Quelle                                                               | Storage location                                                                                              |
 |:-----------------------|:---------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------|
-| traveldata-export.xlsx | Internal corporate travel logs (flights, trains, buses, rental cars) | In this project:<br>ad24-2-fancyproject/traveldata-export.xlsx<br><br>On PODSV FS26 Moodle: https://moodle.zhaw.ch/pluginfile.php/2585021/mod_page/content/2/traveldata-export.xlsx |
+| traveldata-export.xlsx | Internal corporate travel logs (flights, trains, buses, rental cars) <!-- ................................................. -->| In this project:<br>ad24-2-fancyproject/traveldata-export.xlsx<br><br>On PODSV FS26 Moodle: https://moodle.zhaw.ch/pluginfile.php/2585021/mod_page/content/2/traveldata-export.xlsx |
 
 
-### Details Dataset 1
+### Details Dataset
 
 This dataset contains individual travel records for employees and guests, covering:<br>
 - Travel mode (flight, train, bus, rental car)<br>
@@ -70,9 +72,6 @@ Dependent variables: CO₂e emissions, cost
 |             27 | train_alternative_available | bool           | 2 unique values              | train option availability |
 
 <br>
-
-#### If applicable: Entity Relationship Diagram
-
 
 #### Data Chracteristics and Quality
 
@@ -307,32 +306,39 @@ ___
 profile = ProfileReport(raw_df, title="Corporate Travel Data – EDA Report", explorative=True)
 profile.to_file("../eda/travel_profile.html")
 ```
-
-## Processed Data
-### Overview Processed Datasets
-
-: Overview of processed datasets used in the project. {#tbl-processed-overview}
-
-| Name | Quelle | Storage location |
-|----------------|-----------------------------------------|--------------------------------------------------------------------------|
-| Processed Dataset 1      | Name/short description of the data source | Link and/or short description of the location where the data is stored, e.g. accessible to the team |
-| Processed Dataset 2      | …                                       | …                                                                        |
-
-### Details Processed Dataset 1
-
-- Description of what information the dataset contains
-- Details and reasons for the processing steps -> Traceability and ensuring reproducibility
-- How can the data be accessed? Description, scripts, tools, ...
-- ...
-
-#### Data Catalogue
+<br>
 
 
-#### If applicable: Entity Relationship Diagram
+## Summary of Exploratory Data Analysis
 
+The exploratory data analysis (full code and outputs in the `eda/` subfolder) provides a detailed overview of the corporate travel dataset and evaluates its suitability for the planned visualisation product. The dataset contains 25'527 travel segments with complete numerical fields and only limited missingness in a few categorical variables. The data catalogue confirms a consistent schema with well‑defined datatypes, meaningful value ranges, and no structural anomalies.
 
-#### Data Chracteristics and Quality
+### Results of the EDA
+The numerical variables (CO₂e emissions, distance, coordinates, cost) show right‑skewed distributions, driven by long‑haul flights and high‑cost outliers. No missing numerical values were detected. Categorical variables exhibit high cardinality for location‑based fields (e.g., 478 departure airports) and moderate missingness in travel_class, aircraft_type, flight_number, and continent fields. Correlation analysis shows expected relationships (e.g., strong correlation between distance and emissions), and no unexpected multicollinearity. Cramér’s V analysis indicates weak to moderate associations between categorical variables, consistent with heterogeneous global travel behaviour.
 
+### Implications for Data Pre‑Processing
+Because the dataset already matched the requirements for implementing the dashboard, no additional preprocessing was necessary. The absence of missing numerical values eliminates the need for imputation. Categorical missingness is limited to non‑critical fields and can be handled through default labels such as “Unknown”. No deduplication, unit harmonisation, or type corrections were required. The dataset was therefore used in its original form, as it already met the structural and quality requirements for the dashboard.
 
-### Details Processed Dataset 2
-...
+### Implications for Visualisation Design and Implementation
+The characteristics identified in the EDA directly inform the visualisation strategy:
+<br>
+- High cardinality in location fields (e.g. airports) supports the use of maps, clustering, or aggregated views rather than raw categorical bar charts.<br>
+- Identified missing categorical values were small in proportion and not essential to dashboard KPIs<br>
+- Strong distance–emissions correlation allows simplified narratives and combined visualisations.<br>
+- The dominance of flights as transport mode suggests mode‑specific filtering and colour coding.<br>
+- Right‑skewed variables (e.g., emissions, distance, cost) could benefit from log‑scales or quantile binning.<br>
+- Complete business metadata enables faceting and drill‑down interactions.<br>
+<br>
+These insights ensure that the visualisation product remains interpretable, scalable, and aligned with real travel behaviour.
+
+### Data Quality, Quantity, and Limitations
+The dataset is sufficient in both quality and quantity to achieve the visualisation goals. The large sample size supports stable aggregations and meaningful comparisons across business units, travel purposes, and geographies. No additional data is required for the intended dashboard.
+<br>
+Limitations to consider:
+<br>
+- Missing values in travel_class and aircraft_type reduce granularity in specific breakdowns.<br>
+- High variability in cost data may require robust statistics or capped scales.<br>
+- Location fields contain many unique values, which may require grouping (e.g., by country or continent) for readability.<br>
+- Outliers in emissions and cost reflect real behaviour but may distort linear scales.<br>
+<br>
+Despite these limitations, the dataset is robust and well‑suited for the visualisation product.
